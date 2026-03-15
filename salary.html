@@ -290,8 +290,9 @@ const SERVICES = [
   {id:'aroma_gold',name:'นวดอโรม่า ทองคำ (Hot oil)',  prices:{60:999,90:1499,120:1998},fees:{60:200,90:300,120:400}},
   {id:'aroma',     name:'นวดน้ำมัน อโรมา',            prices:{60:600,90:900,120:1200}, fees:{60:200,90:300,120:400}},
   {id:'fix',       name:'นวดแก้อาการ',                prices:{60:600,90:900,120:1200}, fees:{60:200,90:300,120:400}},
-  {id:'spa_hair',  name:'สปาผมเวียดนาม',              prices:{60:550,90:850,120:0},  fees:{60:150,90:225,120:300}},
-  
+  {id:'spa_hair',  name:'สปาผมเวียดนาม',              prices:{60:350,90:525,120:700},  fees:{60:150,90:225,120:300}},
+  {id:'baby',      name:'นวดเด็กทารก',                prices:{60:500,90:750,120:1000}, fees:{60:200,90:300,120:400}},
+  {id:'promo999',  name:'โปรนวด 999',                  prices:{60:999,90:999,120:999},  fees:{60:350,90:350,120:350}},
 ];
 const MONTHS_TH = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
 const MONTHS_FULL = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
@@ -412,8 +413,10 @@ function computeFee(){
   const svc=SERVICES.find(s=>s.id===sid);
   if(!th||!svc){return;}
   let fee=0;
-  if(th.type==='monthly') fee=Math.round(price*0.1);
-  else fee=svc.fees[selDuration]||0;
+  if(th.type==='monthly') {
+    if(sid==='promo999') fee=Math.round(999*0.1);
+    else fee=Math.round(price*0.1);
+  } else fee=svc.fees[selDuration]||0;
   if(spaOn) fee+=60;
   document.getElementById('feeShow').textContent=fee.toLocaleString();
 }
