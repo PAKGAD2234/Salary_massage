@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ระบบค่ามือหมอนวด</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #fdf6ee;
+  --warm: #f5ead8;
+  --beige: #e8d5bc;
+  --brown-1: #4a2c0a;
+  --brown-2: #7a4b1e;
+  --brown-3: #b07040;
+  --brown-4: #d4a070;
+  --brown-5: #e8c9a0;
+  --gold: #c9a227;
+  --gold-light: #f0d97a;
+  --green: #5a7c48;
+  --red: #b85050;
+  --shadow-sm: 0 2px 8px rgba(74,44,10,0.08);
+  --shadow-md: 0 4px 16px rgba(74,44,10,0.12);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Sarabun',sans-serif;background:var(--cream);color:var(--brown-1);min-height:100vh;padding-bottom:90px;}
+
+.header{background:linear-gradient(135deg,var(--brown-1) 0%,var(--brown-2) 100%);color:var(--cream);padding:18px 20px 14px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-md);}
+.header-inner{max-width:480px;margin:0 auto;display:flex;align-items:center;gap:12px;}
+.header-icon{font-size:26px;}
+.header-title{font-family:'Noto Serif Thai',serif;font-size:19px;font-weight:700;}
+.header-sub{font-size:12px;opacity:0.7;margin-top:1px;}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--brown-1);display:flex;z-index:100;box-shadow:0 -4px 20px rgba(74,44,10,0.2);}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 4px 12px;color:rgba(253,246,238,0.45);border:none;background:none;cursor:pointer;font-family:'Sarabun',sans-serif;font-size:10px;gap:4px;transition:color 0.2s;}
+.nav-btn.active{color:var(--gold-light);}
+.nav-icon{font-size:22px;line-height:1;}
+
+.page{display:none;max-width:480px;margin:0 auto;padding:20px 16px;}
+.page.active{display:block;}
+
+.section-title{font-family:'Noto Serif Thai',serif;font-size:18px;font-weight:700;color:var(--brown-2);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.section-title::before{content:'';width:4px;height:22px;background:linear-gradient(to bottom,var(--gold),var(--brown-3));border-radius:2px;flex-shrink:0;}
+
+.card{background:white;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow-sm);margin-bottom:14px;border:1px solid rgba(74,44,10,0.06);}
+
+.form-group{margin-bottom:16px;}
+.form-label{display:block;font-size:13px;font-weight:600;color:var(--brown-2);margin-bottom:6px;}
+.form-control{width:100%;padding:12px 14px;border:1.5px solid var(--beige);border-radius:var(--radius-sm);font-family:'Sarabun',sans-serif;font-size:15px;color:var(--brown-1);background:var(--cream);outline:none;transition:border-color 0.2s,box-shadow 0.2s;appearance:none;-webkit-appearance:none;}
+.form-control:focus{border-color:var(--brown-3);box-shadow:0 0 0 3px rgba(176,112,64,0.12);}
+select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a4b1e' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:40px;}
+
+.radio-group{display:flex;gap:10px;}
+.radio-card{flex:1;border:2px solid var(--beige);border-radius:var(--radius-sm);padding:14px 8px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--cream);}
+.radio-card.selected{border-color:var(--brown-3);background:var(--warm);box-shadow:0 0 0 3px rgba(176,112,64,0.1);}
+.radio-card input{display:none;}
+.radio-card-icon{font-size:22px;margin-bottom:4px;}
+.radio-card-label{font-size:13px;font-weight:600;color:var(--brown-2);}
+.radio-card-sub{font-size:11px;color:var(--brown-3);margin-top:2px;}
+
+.checkbox-card{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--warm);border:2px solid var(--beige);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;margin-bottom:16px;}
+.checkbox-card.checked{border-color:var(--gold);background:#fdf8ec;box-shadow:0 0 0 3px rgba(201,162,39,0.1);}
+.checkbox-card input{display:none;}
+.custom-check{width:22px;height:22px;border:2px solid var(--beige);border-radius:6px;display:flex;align-items:center;justify-content:center;background:white;transition:all 0.2s;flex-shrink:0;font-size:13px;color:transparent;}
+.checkbox-card.checked .custom-check{background:var(--gold);border-color:var(--gold);color:white;}
+.checkbox-label{font-size:14px;font-weight:600;color:var(--brown-2);}
+.checkbox-sub{font-size:12px;color:var(--brown-3);margin-top:2px;}
+
+.fee-display{background:linear-gradient(135deg,var(--brown-1) 0%,var(--brown-2) 100%);border-radius:var(--radius-sm);padding:16px;color:white;text-align:center;margin-bottom:16px;}
+.fee-label{font-size:12px;opacity:0.7;margin-bottom:2px;}
+.fee-value{font-size:36px;font-weight:700;font-family:'Noto Serif Thai',serif;}
+.fee-unit{font-size:14px;opacity:0.8;}
+
+.btn{width:100%;padding:14px;border:none;border-radius:var(--radius-sm);font-family:'Sarabun',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn:active{transform:scale(0.98);}
+.btn-primary{background:linear-gradient(135deg,var(--brown-2) 0%,var(--brown-1) 100%);color:white;box-shadow:var(--shadow-md);}
+.btn-secondary{background:var(--warm);color:var(--brown-2);border:1.5px solid var(--beige);}
+.btn-danger{background:#fff0f0;color:var(--red);border:1.5px solid #f5d0d0;font-size:13px;padding:8px 12px;width:auto;border-radius:8px;}
+.btn-gold{background:linear-gradient(135deg,var(--gold) 0%,#a8811c 100%);color:white;width:auto;padding:9px 18px;font-size:14px;border-radius:8px;}
+.btn-mt{margin-top:10px;}
+
+.therapist-card{background:white;border-radius:var(--radius);padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow-sm);border:1px solid rgba(74,44,10,0.06);display:flex;align-items:center;gap:14px;cursor:pointer;transition:all 0.2s;}
+.therapist-card:active{transform:scale(0.98);background:var(--warm);}
+.therapist-avatar{width:48px;height:48px;background:linear-gradient(135deg,var(--brown-4),var(--brown-3));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.therapist-name{font-size:17px;font-weight:700;color:var(--brown-1);}
+.therapist-type{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:4px;}
+.type-monthly{background:#e6f0e2;color:var(--green);}
+.type-daily{background:var(--warm);color:var(--brown-3);}
+.therapist-stats{font-size:12px;color:var(--brown-4);margin-top:4px;}
+.therapist-arrow{margin-left:auto;color:var(--brown-4);font-size:22px;font-weight:300;}
+
+.empty-state{text-align:center;padding:50px 20px;color:var(--brown-4);}
+.empty-icon{font-size:52px;margin-bottom:12px;}
+.empty-text{font-size:15px;line-height:1.7;}
+
+.month-filter{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px;scrollbar-width:none;}
+.month-filter::-webkit-scrollbar{display:none;}
+.month-btn{flex-shrink:0;padding:8px 16px;border-radius:20px;border:1.5px solid var(--beige);background:white;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;color:var(--brown-3);cursor:pointer;transition:all 0.2s;}
+.month-btn.active{background:var(--brown-2);color:white;border-color:var(--brown-2);}
+
+.report-date{font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:700;color:var(--brown-2);padding:8px 14px;background:var(--warm);border-radius:var(--radius-sm);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.record-item{background:white;border-radius:var(--radius-sm);padding:13px 15px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;box-shadow:var(--shadow-sm);border-left:3px solid var(--brown-4);}
+.record-service{font-size:14px;font-weight:600;color:var(--brown-1);}
+.record-detail{font-size:12px;color:var(--brown-3);margin-top:2px;}
+.record-fee{font-size:20px;font-weight:700;color:var(--brown-2);white-space:nowrap;margin-left:10px;}
+.record-fee-label{font-size:10px;color:var(--brown-4);text-align:right;}
+.record-actions{margin-top:8px;}
+
+.day-total{background:linear-gradient(135deg,var(--brown-2),var(--brown-1));color:white;border-radius:var(--radius-sm);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:8px;margin-bottom:16px;}
+.day-total-label{font-size:13px;opacity:0.85;}
+.day-total-value{font-size:22px;font-weight:700;font-family:'Noto Serif Thai',serif;}
+
+.monthly-summary{background:linear-gradient(135deg,var(--gold) 0%,#8c6810 100%);border-radius:var(--radius);padding:20px;color:white;margin-bottom:16px;}
+.monthly-title{font-family:'Noto Serif Thai',serif;font-size:15px;font-weight:700;margin-bottom:12px;}
+.sum-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.15);}
+.sum-row:last-child{border-bottom:none;}
+.sum-label{font-size:13px;opacity:0.9;}
+.sum-value{font-size:17px;font-weight:700;}
+.sum-total{background:rgba(255,255,255,0.15);border-radius:10px;padding:12px 14px;margin-top:10px;display:flex;justify-content:space-between;align-items:center;}
+.sum-total-label{font-size:14px;font-weight:600;}
+.sum-total-value{font-size:24px;font-weight:700;font-family:'Noto Serif Thai',serif;}
+
+.back-btn{display:flex;align-items:center;gap:6px;background:none;border:none;color:var(--cream);opacity:0.8;font-family:'Sarabun',sans-serif;font-size:14px;cursor:pointer;padding:0;flex-shrink:0;}
+
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--brown-1);color:white;padding:12px 24px;border-radius:30px;font-size:14px;font-weight:500;opacity:0;transition:all 0.3s;pointer-events:none;z-index:999;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.divider{border:none;border-top:1px solid var(--beige);margin:14px 0;}
+.info-box{background:var(--warm);border:1px solid var(--beige);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:14px;font-size:12px;color:var(--brown-3);line-height:1.7;}
+.info-box strong{color:var(--brown-2);display:block;margin-bottom:4px;font-size:13px;}
+</style>
+</head>
+<body>
+
+<div class="header" id="appHeader">
+  <div class="header-inner" id="headerInner">
+    <div class="header-icon">🌿</div>
+    <div>
+      <div class="header-title" id="headerTitle">ระบบค่ามือหมอนวด</div>
+      <div class="header-sub" id="headerSub">จัดการรายได้ร้านนวด</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: ADD RECORD -->
+<div class="page active" id="page-add">
+  <div class="section-title">🌸 บันทึกงานนวด</div>
+  <div class="card">
+    <div class="form-group">
+      <label class="form-label">👤 เลือกหมอนวด</label>
+      <select class="form-control" id="recTherapist" onchange="onTherapistChange()">
+        <option value="">— เลือกหมอนวด —</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">💆 เลือกบริการนวด</label>
+      <select class="form-control" id="recService" onchange="onServiceChange()">
+        <option value="">— เลือกบริการ —</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">⏱️ ระยะเวลา</label>
+      <div class="radio-group">
+        <label class="radio-card" id="dur60" onclick="selectDuration(60)">
+          <input type="radio" name="dur" value="60">
+          <div class="radio-card-icon">🕐</div>
+          <div class="radio-card-label">60 นาที</div>
+          <div class="radio-card-sub">1 ชม.</div>
+        </label>
+        <label class="radio-card" id="dur90" onclick="selectDuration(90)">
+          <input type="radio" name="dur" value="90">
+          <div class="radio-card-icon">🕑</div>
+          <div class="radio-card-label">90 นาที</div>
+          <div class="radio-card-sub">1.5 ชม.</div>
+        </label>
+        <label class="radio-card" id="dur120" onclick="selectDuration(120)">
+          <input type="radio" name="dur" value="120">
+          <div class="radio-card-icon">🕒</div>
+          <div class="radio-card-label">120 นาที</div>
+          <div class="radio-card-sub">2 ชม.</div>
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">💵 ราคางานนวด (บาท)</label>
+      <input type="number" class="form-control" id="recPrice" placeholder="0" oninput="computeFee()">
+      <div id="priceHint" style="font-size:11px;color:var(--brown-4);margin-top:4px;"></div>
+    </div>
+    <label class="checkbox-card" id="spaCard" onclick="toggleSpa()">
+      <input type="checkbox" id="recSpa">
+      <div class="custom-check" id="spaChk">✓</div>
+      <div>
+        <div class="checkbox-label">💇 เพิ่มบริการ สปาผม + สปาหู</div>
+        <div class="checkbox-sub">+60 บาท จากค่ามือปกติ</div>
+      </div>
+    </label>
+    <div class="fee-display">
+      <div class="fee-label">ค่ามือหมอนวด</div>
+      <div class="fee-value" id="feeShow">0</div>
+      <div class="fee-unit">บาท</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">📅 วันที่</label>
+      <input type="date" class="form-control" id="recDate">
+    </div>
+    <button class="btn btn-primary" onclick="saveRecord()">💾 บันทึกข้อมูล</button>
+  </div>
+</div>
+
+<!-- PAGE: THERAPISTS -->
+<div class="page" id="page-therapists">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <div class="section-title" style="margin-bottom:0">👥 หมอนวดทั้งหมด</div>
+    <button class="btn btn-gold" onclick="gotoAddTherapist()">+ เพิ่มหมอนวด</button>
+  </div>
+  <div id="therapistList"></div>
+</div>
+
+<!-- PAGE: REPORT -->
+<div class="page" id="page-report">
+  <div id="reportContent"></div>
+</div>
+
+<!-- PAGE: ADD THERAPIST -->
+<div class="page" id="page-add-therapist">
+  <div class="section-title">✨ เพิ่มหมอนวดใหม่</div>
+  <div class="card">
+    <div class="form-group">
+      <label class="form-label">ชื่อหมอนวด</label>
+      <input type="text" class="form-control" id="newName" placeholder="เช่น พี่น้ำ, พี่ไอซ์, พี่ป่าน">
+    </div>
+    <div class="form-group">
+      <label class="form-label">ประเภทหมอนวด</label>
+      <div class="radio-group">
+        <label class="radio-card" id="typeMonthly" onclick="selectTherapistType('monthly')">
+          <input type="radio" name="ttype" value="monthly">
+          <div class="radio-card-icon">📅</div>
+          <div class="radio-card-label">รายเดือน</div>
+          <div class="radio-card-sub">เงินเดือน 14,000</div>
+        </label>
+        <label class="radio-card" id="typeDaily" onclick="selectTherapistType('daily')">
+          <input type="radio" name="ttype" value="daily">
+          <div class="radio-card-icon">📆</div>
+          <div class="radio-card-label">รายวัน</div>
+          <div class="radio-card-sub">ค่ามือตามตาราง</div>
+        </label>
+      </div>
+    </div>
+    <div id="monthlyInfoBox" style="display:none;">
+      <div class="info-box">
+        <strong>📌 เงื่อนไขหมอนวดรายเดือน</strong>
+        เงินเดือนประจำ 14,000 บาท/เดือน<br>
+        ค่ามือ = ราคางานจริง × 10%
+      </div>
+    </div>
+    <div id="dailyInfoBox" style="display:none;">
+      <div class="info-box">
+        <strong>📌 เงื่อนไขหมอนวดรายวัน</strong>
+        ค่ามือคำนวณจากตารางค่ามือตามบริการและระยะเวลา
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="saveTherapist()">💾 บันทึกหมอนวด</button>
+    <button class="btn btn-secondary btn-mt" onclick="cancelAddTherapist()">← ยกเลิก</button>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <button class="nav-btn active" id="nav-add" onclick="showPage('add')">
+    <span class="nav-icon">➕</span>
+    <span>บันทึกงาน</span>
+  </button>
+  <button class="nav-btn" id="nav-therapists" onclick="showPage('therapists')">
+    <span class="nav-icon">👥</span>
+    <span>หมอนวด</span>
+  </button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== CONSTANTS =====
+const SERVICES = [
+  {id:'thai',      name:'นวดแผนไทย',               prices:{60:250,90:375,120:500},  fees:{60:120,90:180,120:240}},
+  {id:'head',      name:'นวดศีรษะ ไมเกรน',          prices:{60:250,90:375,120:500},  fees:{60:120,90:180,120:240}},
+  {id:'foot',      name:'นวดฝ่าเท้า (กดจุด)',        prices:{60:250,90:375,120:500},  fees:{60:120,90:180,120:240}},
+  {id:'neck',      name:'นวด คอ บ่า ไหล่',           prices:{60:300,90:450,120:600},  fees:{60:130,90:195,120:260}},
+  {id:'oil',       name:'นวดน้ำมัน ออยล์ (รีดเส้น)', prices:{60:350,90:525,120:700},  fees:{60:150,90:225,120:300}},
+  {id:'aroma_gold',name:'นวดอโรม่า ทองคำ (Hot oil)',  prices:{60:999,90:1499,120:1998},fees:{60:200,90:300,120:400}},
+  {id:'aroma',     name:'นวดน้ำมัน อโรมา',            prices:{60:600,90:900,120:1200}, fees:{60:200,90:300,120:400}},
+  {id:'fix',       name:'นวดแก้อาการ',                prices:{60:600,90:900,120:1200}, fees:{60:200,90:300,120:400}},
+  {id:'spa_hair',  name:'สปาผมเวียดนาม',              prices:{60:550,90:850,120:0},  fees:{60:150,90:225,120:300}},
+  
+];
+const MONTHS_TH = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const MONTHS_FULL = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+
+// ===== STATE =====
+let therapists = [], records = [];
+let selDuration = null, selTherapistType = null, spaOn = false;
+let currentPage = 'add', viewingTherapistId = null;
+
+function loadData(){
+  const t = localStorage.getItem('mnv_therapists');
+  const r = localStorage.getItem('mnv_records');
+  if(t) therapists = JSON.parse(t);
+  if(r) records = JSON.parse(r);
+}
+function saveData(){
+  localStorage.setItem('mnv_therapists', JSON.stringify(therapists));
+  localStorage.setItem('mnv_records', JSON.stringify(records));
+}
+
+// ===== NAVIGATION =====
+function showPage(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  const nb = document.getElementById('nav-'+page);
+  if(nb) nb.classList.add('active');
+  currentPage = page;
+  updateHeader();
+  if(page==='therapists') renderTherapists();
+  if(page==='add') initAddForm();
+}
+
+function updateHeader(title, sub, back, backFn){
+  const hTitle = document.getElementById('headerTitle');
+  const hSub = document.getElementById('headerSub');
+  const inner = document.getElementById('headerInner');
+  // clear old back
+  const ob = document.getElementById('backBtn');
+  if(ob) ob.remove();
+
+  if(title){ hTitle.textContent=title; hSub.textContent=sub||''; }
+  else{
+    const map = {
+      'add':['ระบบค่ามือหมอนวด','เพิ่มรายการงานนวด'],
+      'therapists':['หมอนวดทั้งหมด','จัดการรายชื่อ'],
+      'report':['รายงานค่ามือ',''],
+      'add-therapist':['เพิ่มหมอนวดใหม่',''],
+    };
+    const d = map[currentPage]||['ระบบค่ามือหมอนวด',''];
+    hTitle.textContent = d[0]; hSub.textContent = d[1];
+  }
+  if(back){
+    const btn = document.createElement('button');
+    btn.id='backBtn'; btn.className='back-btn';
+    btn.innerHTML='← กลับ'; btn.onclick=backFn;
+    inner.insertBefore(btn, inner.children[0]);
+  }
+}
+
+// ===== TOAST =====
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ===== ADD FORM =====
+function initAddForm(){
+  const tSel = document.getElementById('recTherapist');
+  tSel.innerHTML='<option value="">— เลือกหมอนวด —</option>';
+  therapists.forEach(t=>{
+    const o=document.createElement('option');
+    o.value=t.id; o.textContent=`${t.name} (${t.type==='monthly'?'รายเดือน':'รายวัน'})`;
+    tSel.appendChild(o);
+  });
+  const sSel = document.getElementById('recService');
+  sSel.innerHTML='<option value="">— เลือกบริการ —</option>';
+  SERVICES.forEach(s=>{
+    const o=document.createElement('option');
+    o.value=s.id; o.textContent=s.name;
+    sSel.appendChild(o);
+  });
+  document.getElementById('recDate').value = new Date().toISOString().split('T')[0];
+}
+
+function onTherapistChange(){ computeFee(); }
+
+function selectDuration(d){
+  selDuration=d;
+  [60,90,120].forEach(x=>document.getElementById('dur'+x).classList.toggle('selected',x===d));
+  const svcId=document.getElementById('recService').value;
+  if(svcId){ const svc=SERVICES.find(s=>s.id===svcId); if(svc){ document.getElementById('recPrice').value=svc.prices[d]; document.getElementById('priceHint').textContent=`ราคาปกติ ${svc.prices[d].toLocaleString()} บาท`; } }
+  computeFee();
+}
+
+function onServiceChange(){
+  const svcId=document.getElementById('recService').value;
+  if(!svcId||!selDuration){computeFee();return;}
+  const svc=SERVICES.find(s=>s.id===svcId);
+  if(svc){ document.getElementById('recPrice').value=svc.prices[selDuration]; document.getElementById('priceHint').textContent=`ราคาปกติ ${svc.prices[selDuration].toLocaleString()} บาท`; }
+  computeFee();
+}
+
+function toggleSpa(){
+  spaOn=!spaOn;
+  document.getElementById('spaCard').classList.toggle('checked',spaOn);
+  document.getElementById('spaChk').style.color=spaOn?'white':'transparent';
+  computeFee();
+}
+
+function computeFee(){
+  const tid=document.getElementById('recTherapist').value;
+  const sid=document.getElementById('recService').value;
+  const price=parseFloat(document.getElementById('recPrice').value)||0;
+  if(!tid||!sid||!selDuration){document.getElementById('feeShow').textContent='0';return;}
+  const th=therapists.find(t=>t.id===tid);
+  const svc=SERVICES.find(s=>s.id===sid);
+  if(!th||!svc){return;}
+  let fee=0;
+  if(th.type==='monthly') fee=Math.round(price*0.1);
+  else fee=svc.fees[selDuration]||0;
+  if(spaOn) fee+=60;
+  document.getElementById('feeShow').textContent=fee.toLocaleString();
+}
+
+function saveRecord(){
+  const tid=document.getElementById('recTherapist').value;
+  const sid=document.getElementById('recService').value;
+  const price=parseFloat(document.getElementById('recPrice').value)||0;
+  const date=document.getElementById('recDate').value;
+  if(!tid){showToast('⚠️ เลือกหมอนวดก่อน');return;}
+  if(!sid){showToast('⚠️ เลือกบริการนวดก่อน');return;}
+  if(!selDuration){showToast('⚠️ เลือกระยะเวลาก่อน');return;}
+  if(!price){showToast('⚠️ ใส่ราคางานนวดก่อน');return;}
+  if(!date){showToast('⚠️ เลือกวันที่ก่อน');return;}
+  const th=therapists.find(t=>t.id===tid);
+  const svc=SERVICES.find(s=>s.id===sid);
+  let fee=0;
+  if(th.type==='monthly') fee=Math.round(price*0.1);
+  else fee=svc.fees[selDuration]||0;
+  if(spaOn) fee+=60;
+  records.push({id:Date.now().toString(),therapistId:tid,serviceId:sid,serviceName:svc.name,duration:selDuration,price,fee,spa:spaOn,date,createdAt:new Date().toISOString()});
+  saveData();
+  showToast(`✅ บันทึก "${svc.name}" เรียบร้อย`);
+  // reset
+  document.getElementById('recTherapist').value='';
+  document.getElementById('recService').value='';
+  document.getElementById('recPrice').value='';
+  document.getElementById('priceHint').textContent='';
+  [60,90,120].forEach(x=>document.getElementById('dur'+x).classList.remove('selected'));
+  selDuration=null; spaOn=false;
+  document.getElementById('spaCard').classList.remove('checked');
+  document.getElementById('spaChk').style.color='transparent';
+  document.getElementById('feeShow').textContent='0';
+  document.getElementById('recDate').value=new Date().toISOString().split('T')[0];
+}
+
+// ===== THERAPISTS =====
+function renderTherapists(){
+  const el=document.getElementById('therapistList');
+  if(!therapists.length){
+    el.innerHTML=`<div class="empty-state"><div class="empty-icon">🌿</div><div class="empty-text">ยังไม่มีหมอนวด<br>กด "+ เพิ่มหมอนวด" เพื่อเริ่มต้น</div></div>`;
+    return;
+  }
+  el.innerHTML=therapists.map(t=>{
+    const recs=records.filter(r=>r.therapistId===t.id);
+    const total=recs.reduce((s,r)=>s+r.fee,0);
+    return `<div class="therapist-card" onclick="viewReport('${t.id}')">
+      <div class="therapist-avatar">🧖</div>
+      <div style="flex:1">
+        <div class="therapist-name">${t.name}</div>
+        <span class="therapist-type ${t.type==='monthly'?'type-monthly':'type-daily'}">${t.type==='monthly'?'รายเดือน':'รายวัน'}</span>
+        <div class="therapist-stats">${recs.length} งาน · ค่ามือรวม ${total.toLocaleString()} บาท</div>
+      </div>
+      <div class="therapist-arrow">›</div>
+    </div>`;
+  }).join('');
+}
+
+function gotoAddTherapist(){
+  selTherapistType=null;
+  document.getElementById('newName').value='';
+  document.getElementById('typeMonthly').classList.remove('selected');
+  document.getElementById('typeDaily').classList.remove('selected');
+  document.getElementById('monthlyInfoBox').style.display='none';
+  document.getElementById('dailyInfoBox').style.display='none';
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-add-therapist').classList.add('active');
+  currentPage='add-therapist';
+  updateHeader('เพิ่มหมอนวดใหม่','',true,cancelAddTherapist);
+}
+
+function cancelAddTherapist(){ showPage('therapists'); }
+
+function selectTherapistType(type){
+  selTherapistType=type;
+  document.getElementById('typeMonthly').classList.toggle('selected',type==='monthly');
+  document.getElementById('typeDaily').classList.toggle('selected',type==='daily');
+  document.getElementById('monthlyInfoBox').style.display=type==='monthly'?'block':'none';
+  document.getElementById('dailyInfoBox').style.display=type==='daily'?'block':'none';
+}
+
+function saveTherapist(){
+  const name=document.getElementById('newName').value.trim();
+  if(!name){showToast('⚠️ กรุณาใส่ชื่อหมอนวด');return;}
+  if(!selTherapistType){showToast('⚠️ กรุณาเลือกประเภทหมอนวด');return;}
+  therapists.push({id:Date.now().toString(),name,type:selTherapistType,createdAt:new Date().toISOString()});
+  saveData();
+  showToast(`✅ เพิ่ม "${name}" เรียบร้อย`);
+  showPage('therapists');
+}
+
+// ===== REPORT =====
+function viewReport(tid){
+  viewingTherapistId=tid;
+  const th=therapists.find(t=>t.id===tid);
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-report').classList.add('active');
+  currentPage='report';
+  updateHeader(th.name, th.type==='monthly'?'หมอนวดรายเดือน':'หมอนวดรายวัน', true, ()=>showPage('therapists'));
+  renderReport(tid);
+}
+
+function renderReport(tid){
+  const th=therapists.find(t=>t.id===tid);
+  const recs=records.filter(r=>r.therapistId===tid);
+  const cont=document.getElementById('reportContent');
+  if(!recs.length){
+    cont.innerHTML=`<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">ยังไม่มีรายการงาน<br>สำหรับ ${th.name}</div></div>
+      <button class="btn btn-danger" style="width:100%;margin-top:8px;" onclick="deleteTherapist('${tid}')">🗑️ ลบหมอนวดคนนี้</button>`;
+    return;
+  }
+  const months=[...new Set(recs.map(r=>r.date.substring(0,7)))].sort().reverse();
+  const curMonth=new Date().toISOString().substring(0,7);
+  const selMonth=months.includes(curMonth)?curMonth:months[0];
+
+  let html=`<div style="margin-bottom:14px;"><button class="btn btn-danger" style="width:100%;" onclick="deleteTherapist('${tid}')">🗑️ ลบหมอนวดคนนี้</button></div>`;
+  html+=`<div class="month-filter">`;
+  months.forEach(m=>{
+    const [yr,mo]=m.split('-');
+    html+=`<button class="month-btn${m===selMonth?' active':''}" onclick="switchMonth('${tid}','${m}',this)">${MONTHS_TH[parseInt(mo)-1]} ${parseInt(yr)+543}</button>`;
+  });
+  html+=`</div><div id="monthBody"></div>`;
+  cont.innerHTML=html;
+  renderMonth(tid, selMonth);
+}
+
+function switchMonth(tid, month, btn){
+  document.querySelectorAll('.month-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMonth(tid, month);
+}
+
+function renderMonth(tid, month){
+  const th=therapists.find(t=>t.id===tid);
+  const mRecs=records.filter(r=>r.therapistId===tid&&r.date.startsWith(month));
+  let html='';
+  if(th.type==='monthly'){
+    const mFee=mRecs.reduce((s,r)=>s+r.fee,0);
+    const [yr,mo]=month.split('-');
+    html+=`<div class="monthly-summary">
+      <div class="monthly-title">💰 สรุปรายได้ ${MONTHS_FULL[parseInt(mo)-1]} ${parseInt(yr)+543}</div>
+      <div class="sum-row"><span class="sum-label">เงินเดือนประจำ</span><span class="sum-value">14,000 บาท</span></div>
+      <div class="sum-row"><span class="sum-label">ค่ามือรวมเดือนนี้</span><span class="sum-value">${mFee.toLocaleString()} บาท</span></div>
+      <div class="sum-total"><span class="sum-total-label">รายได้รวมเดือนนี้</span><span class="sum-total-value">${(14000+mFee).toLocaleString()} บาท</span></div>
+    </div>`;
+  }
+  if(!mRecs.length){
+    html+=`<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">ไม่มีรายการในเดือนนี้</div></div>`;
+    document.getElementById('monthBody').innerHTML=html; return;
+  }
+  const days=[...new Set(mRecs.map(r=>r.date))].sort().reverse();
+  days.forEach(day=>{
+    const dRecs=mRecs.filter(r=>r.date===day);
+    const dTotal=dRecs.reduce((s,r)=>s+r.fee,0);
+    html+=`<div class="report-date">📅 ${fmtDate(day)}</div>`;
+    dRecs.forEach((rec,i)=>{
+      const spa=rec.spa?' + สปาหู 🌸':'';
+      html+=`<div class="record-item">
+        <div style="flex:1">
+          <div class="record-service">${i+1}. ${rec.serviceName}</div>
+          <div class="record-detail">${rec.duration} นาที${spa} · ราคา ${rec.price.toLocaleString()} บาท</div>
+          <div class="record-actions"><button class="btn btn-danger" onclick="delRecord('${rec.id}','${tid}')">🗑️ ลบ</button></div>
+        </div>
+        <div style="text-align:right">
+          <div class="record-fee-label">ค่ามือ</div>
+          <div class="record-fee">${rec.fee.toLocaleString()}</div>
+          <div class="record-fee-label">บาท</div>
+        </div>
+      </div>`;
+    });
+    html+=`<div class="day-total"><div class="day-total-label">💵 รวมค่ามือวันนี้</div><div class="day-total-value">${dTotal.toLocaleString()} บาท</div></div>`;
+  });
+  if(th.type==='daily'){
+    const mFee=mRecs.reduce((s,r)=>s+r.fee,0);
+    const [yr,mo]=month.split('-');
+    html+=`<div style="background:linear-gradient(135deg,var(--brown-2),var(--brown-1));border-radius:var(--radius);padding:16px 20px;color:white;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <span style="font-size:13px;opacity:0.85;">รวมค่ามือ ${MONTHS_TH[parseInt(mo)-1]} ${parseInt(yr)+543}</span>
+      <span style="font-size:24px;font-weight:700;font-family:'Noto Serif Thai',serif;">${mFee.toLocaleString()} บาท</span>
+    </div>`;
+  }
+  document.getElementById('monthBody').innerHTML=html;
+}
+
+function delRecord(rid, tid){
+  if(!confirm('ลบรายการนี้?')) return;
+  records=records.filter(r=>r.id!==rid);
+  saveData(); showToast('🗑️ ลบรายการแล้ว');
+  renderReport(tid);
+}
+
+function deleteTherapist(tid){
+  const th=therapists.find(t=>t.id===tid);
+  if(!confirm(`ลบ "${th.name}" และรายการทั้งหมด?`)) return;
+  therapists=therapists.filter(t=>t.id!==tid);
+  records=records.filter(r=>r.therapistId!==tid);
+  saveData(); showToast('🗑️ ลบหมอนวดแล้ว');
+  showPage('therapists');
+}
+
+// ===== HELPERS =====
+function fmtDate(ds){
+  const d=new Date(ds+'T00:00:00');
+  return `${d.getDate()} ${MONTHS_FULL[d.getMonth()]} ${d.getFullYear()+543}`;
+}
+
+// ===== INIT =====
+loadData();
+initAddForm();
+</script>
+</body>
+</html>
