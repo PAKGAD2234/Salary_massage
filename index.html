@@ -280,7 +280,7 @@ select.form-control{background-image:url("data:image/svg+xml,%3Csvg xmlns='http:
 <div class="toast" id="toast"></div>
 
 <script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbwEXZZDBhMJHyUfHaVLr-ZmptjQCFedles0mNsUbCPJnLBNKeTmGl-ZJhvhTuH52zVKgA/exec";
+  
 // ===== CONSTANTS =====
 const SERVICES = [
   {id:'thai',      name:'นวดแผนไทย',               prices:{60:250,90:375,120:500},  fees:{60:120,90:180,120:240}},
@@ -299,6 +299,7 @@ const MONTHS_TH = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.',
 const MONTHS_FULL = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
 
 // ===== STATE =====
+const API_URL = "https://script.google.com/macros/s/AKfycbwEXZZDBhMJHyUfHaVLr-ZmptjQCFedles0mNsUbCPJnLBNKeTmGl-ZJhvhTuH52zVKgA/exec";
 let therapists = [], records = [];
 let selDuration = null, selTherapistType = null, spaOn = false;
 let currentPage = 'add', viewingTherapistId = null;
@@ -312,6 +313,19 @@ function loadData(){
 function saveData(){
   localStorage.setItem('mnv_therapists', JSON.stringify(therapists));
   localStorage.setItem('mnv_records', JSON.stringify(records));
+}
+async function loadRecordsFromSheet(){
+  try{
+    const res = await fetch(API_URL);
+    const data = await res.json();
+
+    if(data){
+      records = data;
+    }
+
+  }catch(err){
+    console.log("โหลดข้อมูลจาก Google Sheet ไม่สำเร็จ",err);
+  }
 }
 
 // ===== NAVIGATION =====
@@ -432,19 +446,15 @@ async function saveRecord(){
   if(!tid){showToast('⚠️ เลือกหมอนวดก่อน');return;}
   if(!sid){showToast('⚠️ เลือกบริการนวดก่อน');return;}
   if(!selDuration){showToast('⚠️ เลือกระยะเวลาก่อน');return;}
-  if(!price){showToast('⚠️ ใส่ราคาก่อน');return;}
-  if(!date){showToast('⚠️ เลือกวันที่');return;}
+  if(!price){showToast('⚠️ ใส่ราคางานนวดก่อน');return;}
+  if(!date){showToast('⚠️ เลือกวันที่ก่อน');return;}
 
   const th=therapists.find(t=>t.id===tid);
   const svc=SERVICES.find(s=>s.id===sid);
 
   let fee=0;
-
-  if(th.type==='monthly'){
-    fee=Math.round(price*0.1);
-  }else{
-    fee=svc.fees[selDuration]||0;
-  }
+  if(th.type==='monthly') fee=Math.round(price*0.1);
+  else fee=svc.fees[selDuration]||0;
 
   if(spaOn) fee+=60;
 
@@ -466,25 +476,35 @@ async function saveRecord(){
     body:JSON.stringify(data)
   });
 
-  // เพิ่มในระบบเว็บ
+  // เก็บในระบบเว็บ
   records.push({
     id:data.id,
     therapistId:tid,
     serviceId:sid,
     serviceName:svc.name,
     duration:selDuration,
-    price:price,
-    fee:fee,
+    price,
+    fee,
     spa:spaOn,
-    date:date,
+    date,
     createdAt:data.createdAt
   });
 
-  renderReport();
+  saveData();
 
   showToast(`✅ บันทึก "${svc.name}" เรียบร้อย`);
 
-  resetForm();
+  // reset
+  document.getElementById('recTherapist').value='';
+  document.getElementById('recService').value='';
+  document.getElementById('recPrice').value='';
+  document.getElementById('priceHint').textContent='';
+  [60,90,120].forEach(x=>document.getElementById('dur'+x).classList.remove('selected'));
+  selDuration=null; spaOn=false;
+  document.getElementById('spaCard').classList.remove('checked');
+  document.getElementById('spaChk').style.color='transparent';
+  document.getElementById('feeShow').textContent='0';
+  document.getElementById('recDate').value=new Date().toISOString().split('T')[0];
 
 }
 
@@ -660,8 +680,13 @@ function fmtDate(ds){
 }
 
 // ===== INIT =====
-loadData();
-initAddForm();
+async function init(){
+  loadData();
+  await loadRecordsFromSheet();
+  initAddForm();
+}
+
+init();
 </script>
 </body>
 </html>
