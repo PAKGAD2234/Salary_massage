@@ -291,7 +291,7 @@ const SERVICES = [
   {id:'aroma_gold',name:'นวดอโรม่า ทองคำ (Hot oil)',  prices:{60:999,90:1499,120:1998},fees:{60:200,90:300,120:400}},
   {id:'aroma',     name:'นวดน้ำมัน อโรมา',            prices:{60:600,90:900,120:1200}, fees:{60:200,90:300,120:400}},
   {id:'fix',       name:'นวดแก้อาการ',                prices:{60:600,90:900,120:1200}, fees:{60:200,90:300,120:400}},
-  {id:'spa_hair',  name:'สปาผมเวียดนาม',              prices:{60:350,90:525,120:700},  fees:{60:150,90:225,120:300}},
+  {id:'spa_hair',  name:'สปาผมเวียดนาม',              prices:{60:550,90:850,120:1100},  fees:{60:150,90:225,120:300}},
   {id:'teach_spa_hair', name:'สอนสปาผมเวียดนาม',       prices:{60:2999,90:2999,120:2999},  fees:{60:150,90:225,120:300}},
   {id:'baby',      name:'นวดเด็กทารก',                prices:{60:500,90:750,120:1000}, fees:{60:200,90:300,120:400}},
   {id:'promo999',  name:'โปรนวด 999',                  prices:{60:999,90:999,120:999},  fees:{60:350,90:350,120:350}},
@@ -306,39 +306,20 @@ let deletedIds = [];
 let selDuration = null, selTherapistType = null, spaOn = false;
 let currentPage = 'add', viewingTherapistId = null;
 
-function loadData(){
-  const t = localStorage.getItem('mnv_therapists');
-  const r = localStorage.getItem('mnv_records');
-  const d = localStorage.getItem('mnv_deleted');
-  if(t) therapists = JSON.parse(t);
-  if(r) records = JSON.parse(r);
-  if(d) deletedIds = JSON.parse(d);
-}
-function saveData(){
-  localStorage.setItem('mnv_therapists', JSON.stringify(therapists));
-  localStorage.setItem('mnv_records', JSON.stringify(records));
-  localStorage.setItem('mnv_deleted', JSON.stringify(deletedIds));
-}
-async function loadRecordsFromSheet(){
-
+// Load data from Google Sheets
+async function loadData(){
   try{
-
     const res = await fetch(API_URL);
     const data = await res.json();
 
     if(Array.isArray(data)){
-
       // แปลงข้อมูลให้เหมือน records ในเว็บ
       records = data.map(r => {
-        // บางครั้ง API/Sheet อาจไม่คืน id มา ให้สร้าง id ชั่วคราวจาก createdAt เพื่อให้ลบได้
         const id = String(r.id || (r.createdAt || r.date || '') + '::' + (r.therapistId||'') + '::' + (r.serviceName||''));
-
-        // ถ้า sheet เก็บเป็น timestamp หรือมีเวลา ให้เอาเฉพาะส่วนวันที่ (YYYY-MM-DD)
         let recordDate = r.date;
         if(typeof recordDate==='string' && recordDate.includes('T')){
           recordDate = recordDate.split('T')[0];
         }
-
         return {
           id,
           therapistId:r.therapistId,
@@ -353,20 +334,19 @@ async function loadRecordsFromSheet(){
         };
       }).filter(r => !deletedIds.includes(String(r.id)));
 
-      saveData();
-
-      if(viewingTherapistId){
-        renderReport(viewingTherapistId);
-      }
-
+      // โหลด therapists จาก localStorage (หรืออาจต้องเพิ่มใน Google Sheets)
+      const t = localStorage.getItem('mnv_therapists');
+      if(t) therapists = JSON.parse(t);
     }
-
   }catch(err){
-
     console.log("โหลดข้อมูล sheet ไม่สำเร็จ",err);
-
   }
+}
 
+function saveData(){
+  localStorage.setItem('mnv_therapists', JSON.stringify(therapists));
+  localStorage.setItem('mnv_records', JSON.stringify(records));
+  localStorage.setItem('mnv_deleted', JSON.stringify(deletedIds));
 }
 
 // ===== NAVIGATION =====
