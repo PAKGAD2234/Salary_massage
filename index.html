@@ -300,7 +300,7 @@ const MONTHS_TH = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.',
 const MONTHS_FULL = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
 
 // ===== STATE =====
-const API_URL = "https://script.google.com/macros/s/AKfycbwEXZZDBhMJHyUfHaVLr-ZmptjQCFedles0mNsUbCPJnLBNKeTmGl-ZJhvhTuH52zVKgA/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycby6mNlBT1yALfHsjVTj-m-kHHXvreYMy4SDtWM8xP1VMqK7L-vrAFZ16nMVcLEsC0_s/exec";
 let therapists = [], records = [];
 let deletedIds = [];
 let selDuration = null, selTherapistType = null, spaOn = false;
@@ -309,8 +309,22 @@ let currentPage = 'add', viewingTherapistId = null;
 // Load data from Google Sheets
   async function loadData(){
 
+    // โหลดจาก localStorage ก่อน (เพื่อไม่ให้หน้าจอมันว่างทันที)
+    const t = localStorage.getItem('mnv_therapists');
+    const r = localStorage.getItem('mnv_records');
+    if(t) therapists = JSON.parse(t);
+    if(r) records = JSON.parse(r);
+    renderTherapists();
+    initAddForm();
+
     try{
       const res = await fetch(API_URL);
+      if(!res.ok){
+        const text = await res.text();
+        console.error('API loadData failed', res.status, text);
+        showToast('❌ โหลดข้อมูลไม่สำเร็จ (status '+res.status+')');
+        return;
+      }
       const data = await res.json();
 
       // API แบบเก่า (Google Sheets) อาจคืนค่าเป็น Array ของ records
@@ -348,7 +362,8 @@ let currentPage = 'add', viewingTherapistId = null;
       initAddForm();
 
     }catch(err){
-      console.log("โหลดข้อมูลไม่สำเร็จ",err);
+      console.error("โหลดข้อมูลไม่สำเร็จ", err);
+      showToast('❌ โหลดข้อมูลไม่สำเร็จ (ตรวจสอบ API_URL หรือการ deploy)');
     }
 
   }
@@ -688,6 +703,10 @@ async function saveTherapist(){
 function viewReport(tid){
   viewingTherapistId=tid;
   const th=therapists.find(t=>t.id===tid);
+  if(!th){
+    showToast('⚠️ ไม่พบข้อมูลหมอนวด (โหลดข้อมูลไม่สำเร็จ)');
+    return;
+  }
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-report').classList.add('active');
