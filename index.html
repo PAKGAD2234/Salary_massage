@@ -310,21 +310,45 @@ let currentPage = 'add', viewingTherapistId = null;
   async function loadData(){
 
     try{
-
       const res = await fetch(API_URL);
-
       const data = await res.json();
 
-      records = data.records || [];
-      therapists = data.therapists || [];
+      // API แบบเก่า (Google Sheets) อาจคืนค่าเป็น Array ของ records
+      if(Array.isArray(data)){
+        records = data.map(r=>{
+          // ถ้า sheet เก็บเวลา (เช่น ISO string) ให้ตัดเป็นวันที่
+          let recordDate = r.date;
+          if(typeof recordDate==='string' && recordDate.includes('T')){
+            recordDate = recordDate.split('T')[0];
+          }
+          return {
+            id: String(r.id || (r.createdAt || recordDate || '') + '::' + (r.therapistId||'') + '::' + (r.serviceName||'')),
+            therapistId: r.therapistId,
+            serviceId: r.serviceId || null,
+            serviceName: r.serviceName,
+            duration: r.duration,
+            price: r.price,
+            fee: r.fee,
+            spa: r.spa,
+            date: recordDate,
+            createdAt: r.createdAt
+          };
+        });
+      } else {
+        // API ใหม่ (object with fields)
+        records = Array.isArray(data.records) ? data.records : [];
+        therapists = Array.isArray(data.therapists) ? data.therapists : [];
+      }
+
+      // ถ้าข้อมูลหมอนวดยังไม่ถูกส่งมาจาก API ให้โหลดจาก localStorage
+      const t = localStorage.getItem('mnv_therapists');
+      if(t) therapists = JSON.parse(t);
 
       renderTherapists();
       initAddForm();
 
     }catch(err){
-
       console.log("โหลดข้อมูลไม่สำเร็จ",err);
-
     }
 
   }
@@ -487,14 +511,33 @@ async function saveRecord(){
   };
 
   // ส่งไป Google Sheet
-      await fetch(API_URL,{
+  try {
+    const res = await fetch(API_URL,{
       method:"POST",
-      body:JSON.stringify({
+      body:new URLSearchParams({
         type:"record",
         ...data
       })
     });
 
+    if(!res.ok){
+      const text = await res.text();
+      console.error('Google Sheet API error', res.status, text);
+      showToast('❌ ไม่สามารถบันทึกลง Google Sheets ได้ (status ' + res.status + ')');
+      return;
+    }
+
+    const json = await res.json();
+    if(json && json.status && json.status !== 'success'){
+      console.error('Google Sheet API returned error', json);
+      showToast('❌ Google Sheets ตอบกลับข้อผิดพลาด');
+      return;
+    }
+  } catch(err) {
+    console.error('Fetch to Google Sheet failed', err);
+    showToast('❌ ไม่สามารถบันทึกลง Google Sheets ได้');
+    return;
+  }
   // เก็บในระบบเว็บ
   records.push({
     id:data.id,
@@ -577,14 +620,68 @@ function selectTherapistType(type){
   document.getElementById('dailyInfoBox').style.display=type==='daily'?'block':'none';
 }
 
-function saveTherapist(){
-  const name=document.getElementById('newName').value.trim();
-  if(!name){showToast('⚠️ กรุณาใส่ชื่อหมอนวด');return;}
-  if(!selTherapistType){showToast('⚠️ กรุณาเลือกประเภทหมอนวด');return;}
-  therapists.push({id:Date.now().toString(),name,type:selTherapistType,createdAt:new Date().toISOString()});
+async function saveTherapist(){
+
+  const name = document.getElementById('newName').value.trim();
+
+  if(!name){
+    showToast('⚠️ กรุณาใส่ชื่อหมอนวด');
+    return;
+  }
+
+  if(!selTherapistType){
+    showToast('⚠️ กรุณาเลือกประเภทหมอนวด');
+    return;
+  }
+
+  const data = {
+    id: Date.now().toString(),
+    name: name,
+    type: selTherapistType,
+    createdAt: new Date().toISOString()
+  };
+
+  // ส่งไป Google Sheet (ถ้าได้)
+  try {
+    const payload = {
+      ...data,
+      type: "therapist",
+      therapistType: data.type // ส่งข้อมูลประเภท (monthly/daily) แยกต่างหาก
+    };
+
+    const res = await fetch(API_URL,{
+      method:"POST",
+      body:new URLSearchParams(payload)
+    });
+
+    if(!res.ok){
+      const text = await res.text();
+      console.error('Google Sheet API error', res.status, text);
+      showToast('❌ บันทึกหมอนวดไม่สำเร็จ (status ' + res.status + ')');
+      return;
+    }
+
+    const json = await res.json();
+    if(json && json.status && json.status !== 'success'){
+      console.error('Google Sheet API returned error', json);
+      showToast('❌ Google Sheets ตอบกลับข้อผิดพลาด');
+      return;
+    }
+  } catch (err) {
+    console.warn('ไม่สามารถส่งข้อมูลหมอนวดไป Google Sheet ได้', err);
+    showToast('❌ ไม่สามารถบันทึกลง Google Sheets ได้');
+    return;
+  }
+
+  // เก็บในเครื่อง เพื่อให้เห็นทันที
+  therapists.push(data);
   saveData();
+  renderTherapists();
+
   showToast(`✅ เพิ่ม "${name}" เรียบร้อย`);
+
   showPage('therapists');
+
 }
 
 // ===== REPORT =====
@@ -715,16 +812,13 @@ function fmtDate(d){
 // ===== INIT =====
 async function init(){
 
-  loadData();
+  await loadData();
 
   initAddForm();
-
-  await loadRecordsFromSheet();
 
 }
 
 init();
-setInterval(loadData,3000);
 </script>
 </body>
 </html>
