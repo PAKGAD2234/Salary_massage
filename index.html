@@ -1109,8 +1109,8 @@
           const teachComm = filtered
             .filter(tx => tx.name === name && tx.service === 'สอนสปาเวียดนาม')
             .reduce((s,tx) => s + (tx.commission||0), 0);
-          commDisplay = Math.round(data.total * 0.1);
-          netIncome = salary - deduct + commDisplay;
+          commDisplay = data.comm;
+          netIncome = salary - deduct + data.comm;
         } else {
           commDisplay = Math.max(data.comm, mode === 'daily' ? 400 : data.comm);
           netIncome = commDisplay;
