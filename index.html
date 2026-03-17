@@ -651,6 +651,7 @@
   <div class="page-header">
     <h1>รายงานรายได้</h1>
     <p>สรุปรายได้พนักงานแต่ละคน</p>
+    <p class="today-date" id="reportDateLabel"></p>
   </div>
 
   <div class="card">
@@ -730,10 +731,11 @@
             <th>ระยะเวลา</th>
             <th>ราคา (฿)</th>
             <th>ค่ามือ (฿)</th>
+            <th>ลบ</th>
           </tr>
         </thead>
         <tbody id="detailTableBody">
-          <tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-light)">กำลังโหลด...</td></tr>
+          <tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-light)">กำลังโหลด...</td></tr>
         </tbody>
       </table>
     </div>
@@ -1032,12 +1034,19 @@
     document.getElementById('filterMonthGroup').style.display = mode === 'monthly' ? '' : 'none';
     document.getElementById('leaveSection').style.display = mode === 'monthly' ? '' : 'none';
 
+    const reportDateLabel = document.getElementById('reportDateLabel');
     let filtered;
     if (mode === 'daily') {
       const dateVal = document.getElementById('filterDate').value;
+      reportDateLabel.textContent = dateVal
+        ? new Date(dateVal).toLocaleDateString('th-TH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+        : '';
       filtered = allTransactions.filter(t => t.dateStr === dateVal);
     } else {
       const monthVal = document.getElementById('filterMonth').value;
+      reportDateLabel.textContent = monthVal
+        ? new Date(`${monthVal}-01`).toLocaleDateString('th-TH', { year: 'numeric', month: 'long' })
+        : '';
       filtered = allTransactions.filter(t => t.dateStr && t.dateStr.startsWith(monthVal));
     }
 
@@ -1122,19 +1131,21 @@
     const detailBody = document.getElementById('detailTableBody');
     detailBody.innerHTML = '';
     if (filtered.length === 0) {
-      detailBody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-light)">ไม่มีข้อมูล</td></tr>`;
+      detailBody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-light)">ไม่มีข้อมูล</td></tr>`;
     } else {
       filtered.forEach(tx => {
         const d = tx.date?.toDate ? tx.date.toDate() : new Date(tx.date);
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td>${d.toLocaleDateString('th-TH',{day:'2-digit',month:'short'})}</td>
+          <td>${d.toLocaleDateString('th-TH',{day:'2-digit',month:'short',year:'numeric'})}</td>
           <td>${tx.name||'—'}</td>
           <td>${tx.service||'—'}</td>
           <td>${tx.durationLabel||'—'}</td>
           <td>${(tx.price||0).toLocaleString()}</td>
           <td>${(tx.commission||0).toLocaleString()}</td>
+          <td><button class="btn-delete" data-id="${tx.id}">ลบ</button></td>
         `;
+        tr.querySelector('.btn-delete').onclick = () => deleteTransaction(tx.id).then(() => renderReport());
         detailBody.appendChild(tr);
       });
     }
