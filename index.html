@@ -20,8 +20,6 @@
       --sand: #e8d5be;
       --sand-light: #f2e8da;
       --sage: #7a8c6e;
-      --sage-light: #a8b89a;
-      --gold: #c9963a;
       --gold-light: #e8c06a;
       --red-soft: #c0392b;
       --text-dark: #2c1a0e;
@@ -32,557 +30,166 @@
       --radius: 16px;
       --radius-sm: 10px;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Sarabun', sans-serif; background-color: var(--cream); color: var(--text-dark); min-height: 100vh; }
 
-    body {
-      font-family: 'Sarabun', sans-serif;
-      background-color: var(--cream);
-      color: var(--text-dark);
-      min-height: 100vh;
-    }
-
-    /* ===== NAV ===== */
-    nav {
-      background: var(--brown-dark);
-      padding: 0 20px;
-      display: flex;
-      align-items: center;
-      gap: 0;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.2);
-    }
-
-    .nav-logo {
-      font-family: 'Playfair Display', serif;
-      color: var(--gold-light);
-      font-size: 1.25rem;
-      font-weight: 700;
-      padding: 16px 20px 16px 0;
-      border-right: 1px solid rgba(255,255,255,0.1);
-      margin-right: 8px;
-      letter-spacing: 0.5px;
-    }
-
-    .nav-tab {
-      padding: 18px 22px;
-      color: rgba(255,255,255,0.55);
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      border: none;
-      background: none;
-      transition: all 0.2s;
-      border-bottom: 3px solid transparent;
-      letter-spacing: 0.3px;
-    }
-
+    nav { background: var(--brown-dark); padding: 0 20px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 16px rgba(0,0,0,0.2); }
+    .nav-logo { font-family: 'Playfair Display', serif; color: var(--gold-light); font-size: 1.25rem; font-weight: 700; padding: 16px 20px 16px 0; border-right: 1px solid rgba(255,255,255,0.1); margin-right: 8px; }
+    .nav-tab { padding: 18px 22px; color: rgba(255,255,255,0.55); font-size: 0.9rem; font-weight: 500; cursor: pointer; border: none; background: none; transition: all 0.2s; border-bottom: 3px solid transparent; }
     .nav-tab:hover { color: rgba(255,255,255,0.85); }
-    .nav-tab.active {
-      color: var(--gold-light);
-      border-bottom-color: var(--gold-light);
-    }
+    .nav-tab.active { color: var(--gold-light); border-bottom-color: var(--gold-light); }
 
-    /* ===== PAGES ===== */
     .page { display: none; padding: 28px 20px 60px; max-width: 900px; margin: 0 auto; }
     .page.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes slideIn { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    .card { background: var(--warm-white); border-radius: var(--radius); box-shadow: var(--shadow-card); padding: 24px; margin-bottom: 20px; border: 1px solid var(--sand); }
+    .card-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--brown-mid); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+    .card-title::before { content:''; display:block; width:4px; height:1.2em; background:var(--brown-pale); border-radius:2px; }
 
-    /* ===== CARD ===== */
-    .card {
-      background: var(--warm-white);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-card);
-      padding: 24px;
-      margin-bottom: 20px;
-      border: 1px solid var(--sand);
-    }
-
-    .card-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.15rem;
-      color: var(--brown-mid);
-      margin-bottom: 18px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .card-title::before {
-      content: '';
-      display: block;
-      width: 4px;
-      height: 1.2em;
-      background: var(--brown-pale);
-      border-radius: 2px;
-    }
-
-    /* ===== FORM ===== */
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
-
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width:600px) { .form-grid { grid-template-columns: 1fr; } }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group.full { grid-column: 1 / -1; }
 
-    label {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-light);
-      letter-spacing: 0.4px;
-      text-transform: uppercase;
-    }
+    label { font-size: 0.8rem; font-weight: 600; color: var(--text-light); letter-spacing: 0.4px; text-transform: uppercase; }
 
-    select, input[type="text"], input[type="number"], input[type="date"], input[type="time"] {
-      width: 100%;
-      padding: 11px 14px;
-      border: 1.5px solid var(--sand);
-      border-radius: var(--radius-sm);
-      background: var(--cream);
-      color: var(--text-dark);
-      font-family: 'Sarabun', sans-serif;
-      font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      appearance: none;
-      -webkit-appearance: none;
+    select, input[type="text"], input[type="number"], input[type="date"], input[type="month"] {
+      width: 100%; padding: 11px 14px; border: 1.5px solid var(--sand); border-radius: var(--radius-sm);
+      background: var(--cream); color: var(--text-dark); font-family: 'Sarabun', sans-serif; font-size: 0.95rem;
+      outline: none; transition: border-color 0.2s, box-shadow 0.2s; appearance: none; -webkit-appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a0724a' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
+      background-repeat: no-repeat; background-position: right 14px center;
     }
+    input[type="text"], input[type="number"], input[type="date"], input[type="month"] { background-image: none; }
+    select:focus, input:focus { border-color: var(--brown-pale); box-shadow: 0 0 0 3px rgba(160,114,74,0.12); }
 
-    input[type="text"], input[type="number"], input[type="date"] {
-      background-image: none;
-    }
-
-    select:focus, input:focus {
-      border-color: var(--brown-pale);
-      box-shadow: 0 0 0 3px rgba(160,114,74,0.12);
-    }
-
-    /* ===== EDITABLE PRICE FIELDS ===== */
-    .price-edit-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 4px;
-    }
-
-    .price-edit-group {
-      background: linear-gradient(135deg, var(--brown-dark) 0%, var(--brown-mid) 100%);
-      border-radius: var(--radius-sm);
-      padding: 12px 14px 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .price-edit-label {
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.6);
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
+    .price-edit-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px; }
+    .price-edit-group { background: linear-gradient(135deg, var(--brown-dark) 0%, var(--brown-mid) 100%); border-radius: var(--radius-sm); padding: 12px 14px 10px; display: flex; flex-direction: column; gap: 6px; }
+    .price-edit-label { font-size: 0.7rem; color: rgba(255,255,255,0.6); letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600; }
     .price-edit-input {
-      width: 100%;
-      background: rgba(255,255,255,0.12) !important;
-      border: 1.5px solid rgba(255,255,255,0.2) !important;
-      border-radius: 8px !important;
-      color: var(--gold-light) !important;
-      font-family: 'Playfair Display', serif !important;
-      font-size: 1.3rem !important;
-      font-weight: 700 !important;
-      padding: 6px 10px !important;
-      text-align: center;
-      background-image: none !important;
-      outline: none;
-      transition: border-color 0.2s, background 0.2s;
+      width: 100%; background: rgba(255,255,255,0.12) !important; border: 1.5px solid rgba(255,255,255,0.2) !important;
+      border-radius: 8px !important; color: var(--gold-light) !important; font-family: 'Playfair Display', serif !important;
+      font-size: 1.3rem !important; font-weight: 700 !important; padding: 6px 10px !important; text-align: center;
+      background-image: none !important; outline: none; transition: border-color 0.2s;
     }
+    .price-edit-input:focus { border-color: var(--gold-light) !important; background: rgba(255,255,255,0.18) !important; }
+    .price-edit-input::placeholder { color: rgba(255,255,255,0.3); font-family:'Sarabun',sans-serif; font-size:0.9rem; font-weight:400; }
+    .price-hint { font-size: 0.68rem; color: rgba(255,255,255,0.4); text-align: center; }
+    .price-edit-row-label { font-size:0.75rem; color:var(--text-light); margin-bottom:4px; text-align:center; font-style:italic; }
 
-    .price-edit-input:focus {
-      border-color: var(--gold-light) !important;
-      background: rgba(255,255,255,0.18) !important;
-      box-shadow: 0 0 0 2px rgba(232,192,106,0.2) !important;
-    }
-
-    .price-edit-input::placeholder {
-      color: rgba(255,255,255,0.3);
-      font-family: 'Sarabun', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 400;
-    }
-
-    .price-edit-hint {
-      font-size: 0.68rem;
-      color: rgba(255,255,255,0.4);
-      text-align: center;
-    }
-
-    /* ===== THERAPIST ROW ===== */
     .therapist-row { display: flex; gap: 8px; align-items: flex-end; }
     .therapist-row select { flex: 1; }
-    .btn-add-therapist {
-      padding: 11px 14px;
-      background: var(--sand);
-      border: 1.5px solid var(--sand);
-      border-radius: var(--radius-sm);
-      color: var(--brown-mid);
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      flex-shrink: 0;
-      line-height: 1;
-    }
+    .btn-add-therapist { padding: 11px 14px; background: var(--sand); border: 1.5px solid var(--sand); border-radius: var(--radius-sm); color: var(--brown-mid); font-size: 1.2rem; cursor: pointer; transition: all 0.2s; flex-shrink: 0; line-height: 1; }
     .btn-add-therapist:hover { background: var(--brown-pale); color: white; }
 
-    /* ===== EMPLOYEE TYPE TOGGLE ===== */
-    .toggle-group { display: flex; gap: 0; border: 1.5px solid var(--sand); border-radius: var(--radius-sm); overflow: hidden; }
-    .toggle-btn {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      background: var(--cream);
-      color: var(--text-light);
-      font-family: 'Sarabun', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
+    .toggle-group { display: flex; border: 1.5px solid var(--sand); border-radius: var(--radius-sm); overflow: hidden; }
+    .toggle-btn { flex: 1; padding: 10px; border: none; background: var(--cream); color: var(--text-light); font-family: 'Sarabun', sans-serif; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
     .toggle-btn.active { background: var(--brown-mid); color: white; }
 
-    /* ===== BUTTONS ===== */
-    .btn {
-      padding: 13px 24px;
-      border: none;
-      border-radius: var(--radius-sm);
-      font-family: 'Sarabun', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      letter-spacing: 0.2px;
-    }
-
-    .btn-save {
-      background: var(--sage);
-      color: white;
-      width: 100%;
-      justify-content: center;
-      margin-top: 8px;
-    }
+    .btn { padding: 13px 24px; border: none; border-radius: var(--radius-sm); font-family: 'Sarabun', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-save { background: var(--sage); color: white; width: 100%; justify-content: center; margin-top: 8px; }
     .btn-save:hover { background: #667a5a; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(122,140,110,0.35); }
-    .btn-save:active { transform: translateY(0); }
     .btn-save:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-    .btn-delete {
-      padding: 6px 12px;
-      background: transparent;
-      border: 1px solid #e0b0aa;
-      color: var(--red-soft);
-      border-radius: 8px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
+    .btn-delete { padding: 5px 9px; background: transparent; border: 1px solid #e0b0aa; color: var(--red-soft); border-radius: 7px; font-size: 0.78rem; cursor: pointer; transition: all 0.2s; }
     .btn-delete:hover { background: var(--red-soft); color: white; }
+    .btn-edit { padding: 5px 9px; background: transparent; border: 1px solid var(--sand); color: var(--brown-light); border-radius: 7px; font-size: 0.78rem; cursor: pointer; transition: all 0.2s; }
+    .btn-edit:hover { background: var(--brown-pale); color: white; border-color: var(--brown-pale); }
 
-    /* ===== SUMMARY CARDS ===== */
-    .summary-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-    @media (max-width: 600px) { .summary-row { grid-template-columns: 1fr 1fr; } }
-
-    .summary-card {
-      background: var(--warm-white);
-      border: 1px solid var(--sand);
-      border-radius: var(--radius);
-      padding: 18px;
-      text-align: center;
-      box-shadow: var(--shadow-soft);
-    }
+    .summary-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+    @media (max-width:600px) { .summary-row { grid-template-columns: 1fr 1fr; } }
+    .summary-card { background: var(--warm-white); border: 1px solid var(--sand); border-radius: var(--radius); padding: 18px; text-align: center; box-shadow: var(--shadow-soft); }
     .summary-card .s-label { font-size: 0.75rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
-    .summary-card .s-value {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.6rem;
-      color: var(--brown-mid);
-      font-weight: 700;
-      margin-top: 4px;
-    }
+    .summary-card .s-value { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--brown-mid); font-weight: 700; margin-top: 4px; }
     .summary-card.highlight { background: linear-gradient(135deg, var(--brown-dark), var(--brown-mid)); }
     .summary-card.highlight .s-label { color: rgba(255,255,255,0.6); }
     .summary-card.highlight .s-value { color: var(--gold-light); }
 
-    /* ===== TRANSACTION LIST ===== */
     .tx-list { display: flex; flex-direction: column; gap: 10px; }
-
-    .tx-item {
-      background: var(--warm-white);
-      border: 1px solid var(--sand);
-      border-radius: var(--radius-sm);
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      animation: slideIn 0.25s ease;
-      transition: box-shadow 0.2s;
-    }
+    .tx-item { background: var(--warm-white); border: 1px solid var(--sand); border-radius: var(--radius-sm); padding: 14px 16px; display: flex; align-items: center; gap: 12px; animation: slideIn 0.25s ease; transition: box-shadow 0.2s; }
     .tx-item:hover { box-shadow: var(--shadow-card); }
-
-    .tx-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--brown-pale), var(--sand));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      color: var(--brown-dark);
-      font-size: 0.85rem;
-      flex-shrink: 0;
-    }
-
+    .tx-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--brown-pale), var(--sand)); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--brown-dark); font-size: 0.85rem; flex-shrink: 0; }
     .tx-info { flex: 1; min-width: 0; }
     .tx-name { font-weight: 600; font-size: 0.9rem; color: var(--text-dark); }
     .tx-detail { font-size: 0.8rem; color: var(--text-light); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
     .tx-amounts { text-align: right; flex-shrink: 0; }
     .tx-price { font-weight: 700; color: var(--brown-mid); font-size: 0.95rem; }
     .tx-com { font-size: 0.75rem; color: var(--sage); margin-top: 1px; }
+    .tx-actions { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
 
-    /* ===== THERAPIST INCOME ===== */
     .therapist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
-
-    .therapist-card {
-      background: var(--warm-white);
-      border: 1px solid var(--sand);
-      border-radius: var(--radius-sm);
-      padding: 16px;
-      text-align: center;
-    }
+    .therapist-card { background: var(--warm-white); border: 1px solid var(--sand); border-radius: var(--radius-sm); padding: 16px; text-align: center; }
     .therapist-card .t-name { font-weight: 600; color: var(--brown-mid); margin-bottom: 8px; }
-    .therapist-card .t-amount {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.3rem;
-      color: var(--brown-dark);
-      font-weight: 700;
-    }
+    .therapist-card .t-amount { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--brown-dark); font-weight: 700; }
     .therapist-card .t-sub { font-size: 0.75rem; color: var(--text-light); margin-top: 2px; }
-    .therapist-card .t-guarantee {
-      display: inline-block;
-      background: var(--gold-light);
-      color: var(--brown-dark);
-      font-size: 0.7rem;
-      padding: 2px 8px;
-      border-radius: 20px;
-      margin-top: 6px;
-      font-weight: 600;
-    }
+    .therapist-card .t-guarantee { display: inline-block; background: var(--gold-light); color: var(--brown-dark); font-size: 0.7rem; padding: 2px 8px; border-radius: 20px; margin-top: 6px; font-weight: 600; }
 
-    /* ===== MODAL ===== */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.4);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+    /* MODALS */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
     .modal-overlay.open { display: flex; }
-    .modal {
-      background: var(--warm-white);
-      border-radius: var(--radius);
-      padding: 28px;
-      width: 100%;
-      max-width: 380px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-      animation: fadeIn 0.2s ease;
-    }
-    .modal h3 {
-      font-family: 'Playfair Display', serif;
-      color: var(--brown-mid);
-      margin-bottom: 16px;
-    }
-    .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
-    .btn-cancel {
-      flex: 1;
-      padding: 11px;
-      background: var(--sand);
-      border: none;
-      border-radius: var(--radius-sm);
-      color: var(--text-mid);
-      font-family: 'Sarabun', sans-serif;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .btn-confirm {
-      flex: 1;
-      padding: 11px;
-      background: var(--sage);
-      border: none;
-      border-radius: var(--radius-sm);
-      color: white;
-      font-family: 'Sarabun', sans-serif;
-      font-weight: 600;
-      cursor: pointer;
-    }
+    .modal { background: var(--warm-white); border-radius: var(--radius); padding: 28px; width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); animation: fadeIn 0.2s ease; max-height: 92vh; overflow-y: auto; }
+    .modal h3 { font-family: 'Playfair Display', serif; color: var(--brown-mid); margin-bottom: 18px; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
+    .btn-cancel { flex:1; padding:11px; background:var(--sand); border:none; border-radius:var(--radius-sm); color:var(--text-mid); font-family:'Sarabun',sans-serif; font-weight:600; cursor:pointer; }
+    .btn-confirm { flex:1; padding:11px; background:var(--sage); border:none; border-radius:var(--radius-sm); color:white; font-family:'Sarabun',sans-serif; font-weight:600; cursor:pointer; }
 
-    /* ===== REPORT PAGE ===== */
+    /* Edit modal inner grid */
+    .edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width:480px) { .edit-grid { grid-template-columns: 1fr; } }
+    .edit-grid .form-group.full { grid-column: 1/-1; }
+    .edit-grid .form-group { margin-bottom: 0; }
+
+    /* Edit price boxes */
+    .edit-price-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .edit-price-box { background: linear-gradient(135deg, var(--brown-dark), var(--brown-mid)); border-radius: var(--radius-sm); padding: 10px 12px 9px; }
+    .edit-price-box .ep-label { font-size: 0.68rem; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 5px; }
+    .edit-price-box input { width:100%; background:rgba(255,255,255,0.12)!important; border:1.5px solid rgba(255,255,255,0.2)!important; border-radius:7px!important; color:var(--gold-light)!important; font-family:'Playfair Display',serif!important; font-size:1.2rem!important; font-weight:700!important; padding:5px 8px!important; text-align:center; background-image:none!important; outline:none; }
+    .edit-price-box input:focus { border-color:var(--gold-light)!important; }
+
+    /* Report */
     .filter-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; align-items: flex-end; }
     .filter-row .form-group { flex: 1; min-width: 140px; }
-
     .report-table-wrap { overflow-x: auto; }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.88rem;
-    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
     thead tr { background: var(--brown-dark); }
-    thead th {
-      padding: 12px 14px;
-      text-align: left;
-      color: rgba(255,255,255,0.85);
-      font-weight: 600;
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-    }
+    thead th { padding: 12px 14px; text-align: left; color: rgba(255,255,255,0.85); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.4px; }
     tbody tr { border-bottom: 1px solid var(--sand-light); transition: background 0.15s; }
     tbody tr:hover { background: var(--sand-light); }
     tbody td { padding: 11px 14px; color: var(--text-dark); }
-    tbody td:last-child { text-align: right; }
+    .action-cell { display: flex; gap: 5px; justify-content: flex-end; }
 
-    .badge {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 0.72rem;
-      font-weight: 600;
-    }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
     .badge-daily { background: #dce8d8; color: #3a6832; }
     .badge-monthly { background: #dde4f0; color: #2a4a8a; }
 
-    /* ===== LOADING ===== */
-    .loading-dot {
-      display: inline-block;
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--brown-pale);
-      animation: pulse 1.2s ease-in-out infinite;
-      margin: 0 2px;
-    }
-    .loading-dot:nth-child(2) { animation-delay: 0.2s; }
-    .loading-dot:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes pulse { 0%,80%,100% { opacity: 0.2; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1); } }
+    .loading-dot { display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--brown-pale); animation:pulse 1.2s ease-in-out infinite; margin:0 2px; }
+    .loading-dot:nth-child(2) { animation-delay:0.2s; }
+    .loading-dot:nth-child(3) { animation-delay:0.4s; }
+    @keyframes pulse { 0%,80%,100%{opacity:0.2;transform:scale(0.8);}40%{opacity:1;transform:scale(1);} }
+    .loading-row { display:flex; justify-content:center; padding:24px; }
+    .empty-state { text-align:center; padding:40px 20px; color:var(--text-light); }
+    .empty-state .e-icon { font-size:2.5rem; margin-bottom:10px; opacity:0.5; }
+    .empty-state .e-text { font-size:0.9rem; }
 
-    .loading-row { display: flex; justify-content: center; padding: 24px; }
+    .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--brown-dark); color:var(--gold-light); padding:12px 24px; border-radius:30px; font-size:0.9rem; font-weight:500; box-shadow:0 8px 32px rgba(0,0,0,0.25); z-index:999; transition:transform 0.3s ease; }
+    .toast.show { transform:translateX(-50%) translateY(0); }
 
-    /* ===== EMPTY ===== */
-    .empty-state {
-      text-align: center;
-      padding: 40px 20px;
-      color: var(--text-light);
-    }
-    .empty-state .e-icon { font-size: 2.5rem; margin-bottom: 10px; opacity: 0.5; }
-    .empty-state .e-text { font-size: 0.9rem; }
-
-    /* ===== DATE HEADER ===== */
-    .date-sep {
-      font-size: 0.75rem;
-      color: var(--text-light);
-      text-align: center;
-      padding: 6px 0;
-      font-weight: 600;
-      letter-spacing: 0.3px;
-    }
-
-    /* ===== TOAST ===== */
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: var(--brown-dark);
-      color: var(--gold-light);
-      padding: 12px 24px;
-      border-radius: 30px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-      z-index: 999;
-      transition: transform 0.3s ease;
-    }
-    .toast.show { transform: translateX(-50%) translateY(0); }
-
-    /* ===== PAGE HEADER ===== */
-    .page-header {
-      margin-bottom: 22px;
-    }
-    .page-header h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.6rem;
-      color: var(--brown-dark);
-      font-weight: 700;
-    }
-    .page-header p {
-      color: var(--text-light);
-      font-size: 0.85rem;
-      margin-top: 4px;
-    }
-
-    .today-date {
-      font-size: 0.8rem;
-      color: var(--text-light);
-      margin-top: 4px;
-    }
-
-    /* ===== CUSTOM PRICE NOTE ===== */
-    .custom-price-note {
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.45);
-      text-align: center;
-      margin-top: 2px;
-      font-style: italic;
-    }
-
-    .price-edit-row-label {
-      font-size: 0.75rem;
-      color: var(--text-light);
-      margin-bottom: 4px;
-      text-align: center;
-      font-style: italic;
-    }
+    .page-header { margin-bottom: 22px; }
+    .page-header h1 { font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--brown-dark); font-weight:700; }
+    .page-header p { color:var(--text-light); font-size:0.85rem; margin-top:4px; }
+    .today-date { font-size:0.8rem; color:var(--text-light); margin-top:4px; }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="nav-logo">✦ By ผักกาด คนงาม</div>
   <button class="nav-tab active" onclick="showPage('pos')">🧾 POS</button>
   <button class="nav-tab" onclick="showPage('report')">📊 รายงาน</button>
 </nav>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <!-- MODAL: Add Therapist -->
@@ -606,15 +213,111 @@
     </div>
   </div>
 </div>
+<!-- MODAL: Add Service -->
+<div class="modal-overlay" id="addServiceModalOverlay">
+  <div class="modal">
+    <h3>➕ เพิ่มบริการใหม่</h3>
+    <div class="edit-grid">
+      <div class="form-group full">
+        <label>ชื่อบริการ</label>
+        <input type="text" id="newServiceName" placeholder="เช่น นวดหินร้อน">
+      </div>
+      <div class="form-group full">
+        <label>ประเภทราคา</label>
+        <div class="toggle-group">
+          <button class="toggle-btn active" id="svcTypeHourly" onclick="setNewSvcType('hourly')">รายชั่วโมง</button>
+          <button class="toggle-btn" id="svcTypeFixed" onclick="setNewSvcType('fixed')">ราคาคงที่</button>
+        </div>
+      </div>
+      <div id="hourlyPriceInputs">
+        <p style="font-size:0.78rem;color:var(--text-light);margin-bottom:8px;grid-column:1/-1">ราคา / ค่ามือ (30, 60, 90, 120 นาที)</p>
+        <div class="edit-price-row" style="margin-bottom:10px">
+          <div class="edit-price-box"><div class="ep-label">ราคา 30 นาที (฿)</div><input type="number" id="np30" min="0" placeholder="0"></div>
+          <div class="edit-price-box"><div class="ep-label">ค่ามือ 30 นาที (฿)</div><input type="number" id="nc30" min="0" placeholder="0"></div>
+        </div>
+        <div class="edit-price-row" style="margin-bottom:10px">
+          <div class="edit-price-box"><div class="ep-label">ราคา 60 นาที (฿)</div><input type="number" id="np60" min="0" placeholder="0"></div>
+          <div class="edit-price-box"><div class="ep-label">ค่ามือ 60 นาที (฿)</div><input type="number" id="nc60" min="0" placeholder="0"></div>
+        </div>
+        <div class="edit-price-row" style="margin-bottom:10px">
+          <div class="edit-price-box"><div class="ep-label">ราคา 90 นาที (฿)</div><input type="number" id="np90" min="0" placeholder="0"></div>
+          <div class="edit-price-box"><div class="ep-label">ค่ามือ 90 นาที (฿)</div><input type="number" id="nc90" min="0" placeholder="0"></div>
+        </div>
+        <div class="edit-price-row">
+          <div class="edit-price-box"><div class="ep-label">ราคา 120 นาที (฿)</div><input type="number" id="np120" min="0" placeholder="0"></div>
+          <div class="edit-price-box"><div class="ep-label">ค่ามือ 120 นาที (฿)</div><input type="number" id="nc120" min="0" placeholder="0"></div>
+        </div>
+      </div>
+      <div id="fixedPriceInputs" style="display:none">
+        <div class="edit-price-row">
+          <div class="edit-price-box"><div class="ep-label">ราคาคงที่ (฿)</div><input type="number" id="npFixed" min="0" placeholder="0"></div>
+          <div class="edit-price-box"><div class="ep-label">ค่ามือคงที่ (฿)</div><input type="number" id="ncFixed" min="0" placeholder="0"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeAddServiceModal()">ยกเลิก</button>
+      <button class="btn-confirm" onclick="confirmAddService()">✓ เพิ่มบริการ</button>
+    </div>
+  </div>
+</div>
 
-<!-- ===== PAGE: POS ===== -->
+<!-- MODAL: Edit Transaction -->
+<div class="modal-overlay" id="editModalOverlay">
+  <div class="modal">
+    <h3>✏️ แก้ไขรายการ</h3>
+    <input type="hidden" id="editTxId">
+    <div class="edit-grid">
+      <div class="form-group full">
+        <label>หมอนวด</label>
+        <select id="editTherapist" onchange="onEditChange()"></select>
+      </div>
+      <div class="form-group full">
+        <label>บริการ</label>
+        <select id="editService" onchange="onEditChange()"></select>
+      </div>
+      <div class="form-group full">
+        <label>ระยะเวลา</label>
+        <select id="editDuration" onchange="onEditChange()">
+          <option value="">-- เลือกระยะเวลา --</option>
+          <option value="30">30 นาที</option>
+          <option value="60">1 ชั่วโมง (60 นาที)</option>
+          <option value="90">1 ชั่วโมง 30 นาที (90 นาที)</option>
+          <option value="120">2 ชั่วโมง (120 นาที)</option>
+          <option value="fixed">ราคาคงที่</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label>วันที่</label>
+        <input type="date" id="editDate">
+      </div>
+      <div class="form-group full">
+        <div class="edit-price-row">
+          <div class="edit-price-box">
+            <div class="ep-label">ราคาบริการ (฿)</div>
+            <input type="number" id="editPrice" min="0" placeholder="0" oninput="onEditPriceInput()">
+          </div>
+          <div class="edit-price-box">
+            <div class="ep-label">ค่ามือพนักงาน (฿)</div>
+            <input type="number" id="editComm" min="0" placeholder="0">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeEditModal()">ยกเลิก</button>
+      <button class="btn-confirm" onclick="confirmEditTransaction()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: POS -->
 <div class="page active" id="page-pos">
   <div class="page-header">
     <h1>บันทึกบริการ</h1>
     <p class="today-date" id="todayLabel"></p>
   </div>
 
-  <!-- Summary -->
   <div class="summary-row">
     <div class="summary-card highlight">
       <div class="s-label">ยอดรวมวันนี้</div>
@@ -630,7 +333,6 @@
     </div>
   </div>
 
-  <!-- Form -->
   <div class="card">
     <div class="card-title">เพิ่มรายการ</div>
     <div class="form-grid">
@@ -640,15 +342,18 @@
           <select id="therapistSelect" onchange="updatePricePreview()">
             <option value="">-- เลือกหมอนวด --</option>
           </select>
-          <button class="btn-add-therapist" title="เพิ่มหมอนวดใหม่" onclick="openModal()">+</button>
+          <button class="btn-add-therapist" onclick="openModal()">+</button>
         </div>
       </div>
       <div class="form-group">
         <label>บริการ</label>
-        <select id="serviceSelect" onchange="updatePricePreview()">
-          <option value="">-- เลือกบริการ --</option>
-        </select>
-      </div>
+        <div class="therapist-row">
+          <select id="serviceSelect" onchange="updatePricePreview()">
+            <option value="">-- เลือกบริการ --</option>
+          </select>
+          <button class="btn-add-therapist" onclick="openAddServiceModal()">+</button>
+        </div>
+    </div>
       <div class="form-group full">
         <label>ระยะเวลา</label>
         <select id="durationSelect" onchange="updatePricePreview()">
@@ -664,33 +369,18 @@
         <label>วันที่</label>
         <input type="date" id="transactionDate">
       </div>
-
-      <!-- ===== EDITABLE PRICE & COMMISSION ===== -->
       <div class="form-group full">
         <p class="price-edit-row-label">✏️ แก้ไขราคาและค่ามือได้ตามต้องการ</p>
         <div class="price-edit-row">
           <div class="price-edit-group">
             <div class="price-edit-label">ราคาบริการ (฿)</div>
-            <input
-              type="number"
-              id="inputPrice"
-              class="price-edit-input"
-              placeholder="—"
-              min="0"
-              oninput="onPriceManualEdit()"
-            >
-            <div class="custom-price-note" id="defaultPriceNote"></div>
+            <input type="number" id="inputPrice" class="price-edit-input" placeholder="—" min="0" oninput="onPriceManualEdit()">
+            <div class="price-hint" id="defaultPriceNote"></div>
           </div>
           <div class="price-edit-group">
             <div class="price-edit-label">ค่ามือพนักงาน (฿)</div>
-            <input
-              type="number"
-              id="inputComm"
-              class="price-edit-input"
-              placeholder="—"
-              min="0"
-            >
-            <div class="custom-price-note" id="defaultCommNote"></div>
+            <input type="number" id="inputComm" class="price-edit-input" placeholder="—" min="0">
+            <div class="price-hint" id="defaultCommNote"></div>
           </div>
         </div>
       </div>
@@ -700,28 +390,22 @@
     </button>
   </div>
 
-  <!-- Therapist Income -->
   <div class="card">
     <div class="card-title">รายได้หมอนวดวันนี้</div>
     <div class="therapist-grid" id="therapistGrid">
-      <div class="loading-row">
-        <span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span>
-      </div>
+      <div class="loading-row"><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div>
     </div>
   </div>
 
-  <!-- Transaction List -->
   <div class="card">
     <div class="card-title">รายการวันนี้</div>
     <div class="tx-list" id="txList">
-      <div class="loading-row">
-        <span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span>
-      </div>
+      <div class="loading-row"><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div>
     </div>
   </div>
 </div>
 
-<!-- ===== PAGE: REPORT ===== -->
+<!-- PAGE: REPORT -->
 <div class="page" id="page-report">
   <div class="page-header">
     <h1>รายงานรายได้</h1>
@@ -750,68 +434,39 @@
     </div>
   </div>
 
-  <!-- Summary for report -->
-  <div class="summary-row" id="reportSummaryRow">
+  <div class="summary-row">
     <div class="summary-card highlight">
-      <div class="s-label">ยอดรวม</div>
-      <div class="s-value" id="rTotal">0</div>
+      <div class="s-label">ยอดรวม</div><div class="s-value" id="rTotal">0</div>
     </div>
     <div class="summary-card">
-      <div class="s-label">ค่ามือรวม</div>
-      <div class="s-value" id="rComm">0</div>
+      <div class="s-label">ค่ามือรวม</div><div class="s-value" id="rComm">0</div>
     </div>
     <div class="summary-card">
-      <div class="s-label">รายการ</div>
-      <div class="s-value" id="rCount">0</div>
+      <div class="s-label">รายการ</div><div class="s-value" id="rCount">0</div>
     </div>
   </div>
 
-  <!-- Report Table -->
   <div class="card">
     <div class="card-title">สรุปรายบุคคล</div>
     <div class="report-table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th>ชื่อ</th>
-            <th>ประเภท</th>
-            <th>ยอดทำ (฿)</th>
-            <th>ค่ามือ (฿)</th>
-            <th>รายได้สุทธิ (฿)</th>
-          </tr>
-        </thead>
-        <tbody id="reportTableBody">
-          <tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-light)">กำลังโหลด...</td></tr>
-        </tbody>
+        <thead><tr><th>ชื่อ</th><th>ประเภท</th><th>ยอดทำ (฿)</th><th>ค่ามือ (฿)</th><th>รายได้สุทธิ (฿)</th></tr></thead>
+        <tbody id="reportTableBody"><tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text-light)">กำลังโหลด...</td></tr></tbody>
       </table>
     </div>
   </div>
 
-  <!-- Leave Management (monthly) -->
   <div class="card" id="leaveSection" style="display:none">
     <div class="card-title">หักวันขาด/ลา (พนักงานรายเดือน)</div>
     <div id="leaveInputs"></div>
   </div>
 
-  <!-- Detail Table -->
   <div class="card">
     <div class="card-title">รายการทั้งหมด</div>
     <div class="report-table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th>วันที่</th>
-            <th>หมอนวด</th>
-            <th>บริการ</th>
-            <th>ระยะเวลา</th>
-            <th>ราคา (฿)</th>
-            <th>ค่ามือ (฿)</th>
-            <th>ลบ</th>
-          </tr>
-        </thead>
-        <tbody id="detailTableBody">
-          <tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-light)">กำลังโหลด...</td></tr>
-        </tbody>
+        <thead><tr><th>วันที่</th><th>หมอนวด</th><th>บริการ</th><th>ระยะเวลา</th><th>ราคา (฿)</th><th>ค่ามือ (฿)</th><th>จัดการ</th></tr></thead>
+        <tbody id="detailTableBody"><tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-light)">กำลังโหลด...</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -820,12 +475,12 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import {
-    getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy, setDoc, getDocs
+    getFirestore, collection, addDoc, onSnapshot, deleteDoc,
+    doc, query, orderBy, updateDoc
   } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  // ========== CONFIG ==========
   const firebaseConfig = {
-    apiKey: "AIzaSyBvTJR8pE3aPRD6Z3ibFCvbTpnXihs08MM",
+    apiKey: "AIzaSy...",
     authDomain: "massage-pos-4fb5b.firebaseapp.com",
     projectId: "massage-pos-4fb5b",
     appId: "1:279791437227:web:42f3dae019a993e741feee"
@@ -836,26 +491,25 @@
 
   // ========== DATA ==========
   const SERVICES = {
-    "นวดแผนไทย":         { prices: [125,250,375,500], comms: [60,120,180,240], fixed: false },
-    "นวดศีรษะ ไมเกรน":   { prices: [125,250,375,500], comms: [60,120,180,240], fixed: false },
-    "นวดฝ่าเท้า (กดจุด)": { prices: [125,250,375,500], comms: [60,120,180,240], fixed: false },
-    "นวดคอ บ่า ไหล่":    { prices: [150,300,450,600], comms: [65,130,195,260], fixed: false },
-    "นวดน้ำมัน ออยล์":   { prices: [175,350,525,700], comms: [75,150,225,300], fixed: false },
-    "นวดอโรมา ทองคำ":    { prices: [499.5,999,1499,1998],comms: [100,200,300,400], fixed: false },
-    "นวดน้ำมัน อโรมา":   { prices: [300,600,900,1200], comms: [100,200,300,40], fixed: false },
-    "นวดแก้อาการ":       { prices: [300,600,900,1200], comms: [100,200,300,400], fixed: false },
-    "ขัดผิว + อโรมา":    { prices: [0,1499,1499,1499], comms: [0,490,490,490], fixed: false },
-    "สปาผมเวียดนาม":     { prices: [0,550,825,1100], comms: [0,150,225,300], fixed: false },
-    "สปาผมเวียดนาม+สปาหู":{ prices: [0,850,0,0], comms: [0,210,0,0], fixed: false },
-    "นวดบุฟเฟต์ โปร 999": { prices: [0,999,999,999], comms: [0,350,0,0], fixed: false },
-    "สปาบุฟเฟต์ 3 ชม.":  { prices: [999], comms: [350], fixed: true },
-    "สอนสปาเวียดนาม":    { prices: [2999], comms: null, fixed: true },
-    "BB glow 2500 คอร์ส 3 ครั้ง /ครั้งที่ 1": { prices: [0,833,0,0], comms: [0,0,0,0], fixed: false },
-    "BB glow 2500 คอร์ส 3 ครั้ง /ครั้งที่ 2": { prices: [0,833,0,0], comms: [0,0,0,0], fixed: false },
-    "BB glow 2500 คอร์ส 3 ครั้ง /ครั้งที่ 3": { prices: [0,833,0,0], comms: [0,0,0,0], fixed: false },
-    "ขัดผิว": { prices: [0,999,0,0], comms: [0,290,0,0], fixed: false },
+    "นวดแผนไทย":         { prices:[125,250,375,500], comms:[60,120,180,240], fixed:false },
+    "นวดศีรษะ ไมเกรน":   { prices:[125,250,375,500], comms:[60,120,180,240], fixed:false },
+    "นวดฝ่าเท้า (กดจุด)": { prices:[125,250,375,500], comms:[60,120,180,240], fixed:false },
+    "นวดคอ บ่า ไหล่":    { prices:[150,300,450,600], comms:[65,130,195,260], fixed:false },
+    "นวดน้ำมัน ออยล์":   { prices:[175,350,525,700], comms:[75,150,225,300], fixed:false },
+    "นวดอโรมา ทองคำ":    { prices:[499.5,999,1499,1998], comms:[100,200,300,400], fixed:false },
+    "นวดน้ำมัน อโรมา":   { prices:[300,600,900,1200], comms:[100,200,300,40], fixed:false },
+    "นวดแก้อาการ":       { prices:[300,600,900,1200], comms:[100,200,300,400], fixed:false },
+    "ขัดผิว + อโรมา":    { prices:[0,1499,1499,1499], comms:[0,490,490,490], fixed:false },
+    "สปาผมเวียดนาม":     { prices:[0,550,825,1100], comms:[0,150,225,300], fixed:false },
+    "สปาผมเวียดนาม+สปาหู":{ prices:[0,850,0,0], comms:[0,210,0,0], fixed:false },
+    "นวดบุฟเฟต์ โปร 999": { prices:[0,999,999,999], comms:[0,350,0,0], fixed:false },
+    "สปาบุฟเฟต์ 3 ชม.":  { prices:[999], comms:[350], fixed:true },
+    "สอนสปาเวียดนาม":    { prices:[2999], comms:null, fixed:true },
+    "BB glow 2500 คอร์ส 3 ครั้ง /ครั้งที่ 1": { prices:[0,833,0,0], comms:[0,0,0,0], fixed:false },
+    "BB glow 2500 คอร์ส 3 ครั้ง /ครั้งที่ 2": { prices:[0,833,0,0], comms:[0,0,0,0], fixed:false },
+    "BB glow 2500 คอร์ส 3 ครั้ง /ครั้งที่ 3": { prices:[0,833,0,0], comms:[0,0,0,0], fixed:false },
+    "ขัดผิว": { prices:[0,999,0,0], comms:[0,290,0,0], fixed:false },
   };
-
   const DURATIONS = ["30","60","90","120"];
 
   // ========== STATE ==========
@@ -865,32 +519,30 @@
 
   // ========== INIT ==========
   const today = new Date();
-  document.getElementById('todayLabel').textContent = today.toLocaleDateString('th-TH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
-  const filterDate = document.getElementById('filterDate');
-  const filterMonth = document.getElementById('filterMonth');
-  filterDate.value = today.toISOString().split('T')[0];
-  filterMonth.value = today.toISOString().slice(0,7);
-
+  document.getElementById('todayLabel').textContent =
+    today.toLocaleDateString('th-TH',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('filterDate').value = today.toISOString().split('T')[0];
+  document.getElementById('filterMonth').value = today.toISOString().slice(0,7);
   document.getElementById('transactionDate').value = today.toISOString().split('T')[0];
 
-  // Populate service dropdown
-  const serviceSelect = document.getElementById('serviceSelect');
-  Object.keys(SERVICES).forEach(name => {
-    const opt = document.createElement('option');
-    opt.value = name;
-    opt.textContent = name;
-    serviceSelect.appendChild(opt);
+  // Populate service selects
+  [document.getElementById('serviceSelect'), document.getElementById('editService')].forEach(sel => {
+    sel.innerHTML = '<option value="">-- เลือกบริการ --</option>';
+    Object.keys(SERVICES).forEach(name => {
+      const opt = document.createElement('option');
+      opt.value = name; opt.textContent = name;
+      sel.appendChild(opt);
+    });
   });
 
   // ========== THERAPISTS ==========
   onSnapshot(collection(db, 'therapists'), snap => {
     therapists = [];
     snap.forEach(d => therapists.push({ id: d.id, ...d.data() }));
-    refreshTherapistDropdown();
+    refreshMainTherapistDropdown();
   });
 
-  function refreshTherapistDropdown() {
+  function refreshMainTherapistDropdown() {
     const sel = document.getElementById('therapistSelect');
     const cur = sel.value;
     sel.innerHTML = '<option value="">-- เลือกหมอนวด --</option>';
@@ -903,6 +555,18 @@
     if (cur) sel.value = cur;
   }
 
+  function populateEditTherapistDropdown(selected = '') {
+    const sel = document.getElementById('editTherapist');
+    sel.innerHTML = '<option value="">-- เลือกหมอนวด --</option>';
+    therapists.forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t.name;
+      opt.textContent = t.name + (t.type === 'monthly' ? ' (รายเดือน)' : '');
+      sel.appendChild(opt);
+    });
+    if (selected) sel.value = selected;
+  }
+
   window.openModal = () => {
     document.getElementById('newTherapistName').value = '';
     modalType = 'daily';
@@ -910,15 +574,12 @@
     document.getElementById('modalTypeMonthly').classList.remove('active');
     document.getElementById('modalOverlay').classList.add('open');
   };
-
   window.closeModal = () => document.getElementById('modalOverlay').classList.remove('open');
-
-  window.setModalType = (t) => {
+  window.setModalType = t => {
     modalType = t;
     document.getElementById('modalTypeDaily').classList.toggle('active', t === 'daily');
     document.getElementById('modalTypeMonthly').classList.toggle('active', t === 'monthly');
   };
-
   window.confirmAddTherapist = async () => {
     const name = document.getElementById('newTherapistName').value.trim();
     if (!name) { showToast('กรุณาใส่ชื่อหมอนวด'); return; }
@@ -927,17 +588,69 @@
     closeModal();
     showToast(`เพิ่ม "${name}" เรียบร้อย`);
   };
+  let newSvcType = 'hourly';
+
+window.openAddServiceModal = () => {
+  document.getElementById('newServiceName').value = '';
+  ['np30','nc30','np60','nc60','np90','nc90','np120','nc120','npFixed','ncFixed'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  setNewSvcType('hourly');
+  document.getElementById('addServiceModalOverlay').classList.add('open');
+};
+
+window.closeAddServiceModal = () => document.getElementById('addServiceModalOverlay').classList.remove('open');
+
+window.setNewSvcType = t => {
+  newSvcType = t;
+  document.getElementById('svcTypeHourly').classList.toggle('active', t === 'hourly');
+  document.getElementById('svcTypeFixed').classList.toggle('active', t === 'fixed');
+  document.getElementById('hourlyPriceInputs').style.display = t === 'hourly' ? '' : 'none';
+  document.getElementById('fixedPriceInputs').style.display = t === 'fixed' ? '' : 'none';
+};
+
+window.confirmAddService = () => {
+  const name = document.getElementById('newServiceName').value.trim();
+  if (!name) { showToast('⚠ กรุณาใส่ชื่อบริการ'); return; }
+  if (SERVICES[name]) { showToast('มีบริการชื่อนี้อยู่แล้ว'); return; }
+
+  if (newSvcType === 'fixed') {
+    const p = parseFloat(document.getElementById('npFixed').value) || 0;
+    const c = parseFloat(document.getElementById('ncFixed').value) || 0;
+    SERVICES[name] = { prices: [p], comms: [c], fixed: true };
+  } else {
+    const prices = [
+      parseFloat(document.getElementById('np30').value) || 0,
+      parseFloat(document.getElementById('np60').value) || 0,
+      parseFloat(document.getElementById('np90').value) || 0,
+      parseFloat(document.getElementById('np120').value) || 0,
+    ];
+    const comms = [
+      parseFloat(document.getElementById('nc30').value) || 0,
+      parseFloat(document.getElementById('nc60').value) || 0,
+      parseFloat(document.getElementById('nc90').value) || 0,
+      parseFloat(document.getElementById('nc120').value) || 0,
+    ];
+    SERVICES[name] = { prices, comms, fixed: false };
+  }
+
+  // เพิ่มลง dropdown ทั้งสองจุด
+  [document.getElementById('serviceSelect'), document.getElementById('editService')].forEach(sel => {
+    const opt = document.createElement('option');
+    opt.value = name; opt.textContent = name;
+    sel.appendChild(opt);
+  });
+
+  closeAddServiceModal();
+  showToast(`✓ เพิ่มบริการ "${name}" แล้ว`);
+};
 
   // ========== PRICE CALC ==========
-  // คำนวณราคา/ค่ามือ default จาก service+duration+therapist type
   function calcDefaultPriceComm(svc, dur, tName) {
     if (!svc || !dur) return { price: null, comm: null };
-
     const data = SERVICES[svc];
     if (!data) return { price: null, comm: null };
-
     let price, comm;
-
     if (data.fixed) {
       price = data.prices[0];
       comm = data.comms ? data.comms[0] : 0;
@@ -947,56 +660,37 @@
       price = data.prices[idx];
       comm = data.comms ? data.comms[idx] : 0;
     }
-
-    // เช็คประเภทพนักงาน → รายเดือนคิดค่าคอม 10%
     const t = therapists.find(x => x.name === tName);
-    if (t && t.type === 'monthly') {
-      comm = Math.round(price * 0.1);
-    }
-
-    // Special: สอนสปา
-    if (svc === 'สอนสปาเวียดนาม') {
-      comm = t && t.type === 'monthly' ? Math.round(price * 0.2) : 0;
-    }
-
+    if (t && t.type === 'monthly') comm = Math.round(price * 0.1);
+    if (svc === 'สอนสปาเวียดนาม') comm = (t && t.type === 'monthly') ? Math.round(price * 0.2) : 0;
     return { price, comm };
   }
 
-  // เมื่อเลือก service/duration/therapist → อัปเดต input price & comm (แต่ยังแก้ได้)
   window.updatePricePreview = () => {
     const svc = document.getElementById('serviceSelect').value;
     const dur = document.getElementById('durationSelect').value;
     const tName = document.getElementById('therapistSelect').value;
-
     const { price, comm } = calcDefaultPriceComm(svc, dur, tName);
-
-    const inputPrice = document.getElementById('inputPrice');
-    const inputComm = document.getElementById('inputComm');
-    const defaultPriceNote = document.getElementById('defaultPriceNote');
-    const defaultCommNote = document.getElementById('defaultCommNote');
-
     if (price !== null) {
-      inputPrice.value = price;
-      inputComm.value = comm;
-      defaultPriceNote.textContent = `ราคามาตรฐาน: ${price.toLocaleString()} ฿`;
-      defaultCommNote.textContent = `ค่ามือมาตรฐาน: ${comm.toLocaleString()} ฿`;
+      document.getElementById('inputPrice').value = price;
+      document.getElementById('inputComm').value = comm;
+      document.getElementById('defaultPriceNote').textContent = `มาตรฐาน: ${price.toLocaleString()} ฿`;
+      document.getElementById('defaultCommNote').textContent = `มาตรฐาน: ${comm.toLocaleString()} ฿`;
     } else {
-      inputPrice.value = '';
-      inputComm.value = '';
-      defaultPriceNote.textContent = '';
-      defaultCommNote.textContent = '';
+      document.getElementById('inputPrice').value = '';
+      document.getElementById('inputComm').value = '';
+      document.getElementById('defaultPriceNote').textContent = '';
+      document.getElementById('defaultCommNote').textContent = '';
     }
   };
 
-  // เมื่อแก้ราคาเอง → ถ้าเป็นรายเดือน ค่ามือคำนวณ 10% อัตโนมัติ
   window.onPriceManualEdit = () => {
     const tName = document.getElementById('therapistSelect').value;
     const t = therapists.find(x => x.name === tName);
     const svc = document.getElementById('serviceSelect').value;
-
     if (t && t.type === 'monthly' && svc !== 'สอนสปาเวียดนาม') {
-      const newPrice = parseFloat(document.getElementById('inputPrice').value) || 0;
-      document.getElementById('inputComm').value = Math.round(newPrice * 0.1);
+      const p = parseFloat(document.getElementById('inputPrice').value) || 0;
+      document.getElementById('inputComm').value = Math.round(p * 0.1);
     }
   };
 
@@ -1018,21 +712,13 @@
     btn.innerHTML = '<span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span>';
 
     try {
-      const durLabel = dur === 'fixed' ? 'ราคาคงที่'
-        : dur === '30' ? '30 นาที'
-        : dur === '60' ? '60 นาที'
-        : dur === '90' ? '90 นาที' : '120 นาที';
-
-      const date = new Date(dateStr + 'T12:00:00');
-
-      await addDoc(collection(db, 'transactions'), {
+      const durLabel = dur==='fixed'?'ราคาคงที่':dur==='30'?'30 นาที':dur==='60'?'60 นาที':dur==='90'?'90 นาที':'120 นาที';
+      await addDoc(collection(db,'transactions'), {
         name, service, duration: dur, durationLabel: durLabel,
         price, commission: isNaN(comm) ? 0 : comm,
-        date: date,
-        dateStr: dateStr
+        date: new Date(dateStr + 'T12:00:00'), dateStr
       });
       showToast('✓ บันทึกสำเร็จ');
-      // Reset form
       document.getElementById('serviceSelect').value = '';
       document.getElementById('durationSelect').value = '';
       document.getElementById('transactionDate').value = new Date().toISOString().split('T')[0];
@@ -1040,12 +726,73 @@
       document.getElementById('inputComm').value = '';
       document.getElementById('defaultPriceNote').textContent = '';
       document.getElementById('defaultCommNote').textContent = '';
-    } catch(e) {
-      showToast('❌ บันทึกไม่สำเร็จ: ' + e.message);
-    }
+    } catch(e) { showToast('❌ บันทึกไม่สำเร็จ: ' + e.message); }
 
     btn.disabled = false;
     btn.innerHTML = '<span>✓</span> บันทึกรายการ';
+  };
+
+  // ========== EDIT MODAL ==========
+  window.openEditModal = (tx) => {
+    document.getElementById('editTxId').value = tx.id;
+    populateEditTherapistDropdown(tx.name || '');
+    document.getElementById('editService').value = tx.service || '';
+    document.getElementById('editDuration').value = tx.duration || '';
+    document.getElementById('editDate').value = tx.dateStr || '';
+    document.getElementById('editPrice').value = tx.price ?? 0;
+    document.getElementById('editComm').value = tx.commission ?? 0;
+    document.getElementById('editModalOverlay').classList.add('open');
+  };
+
+  window.closeEditModal = () => document.getElementById('editModalOverlay').classList.remove('open');
+
+  // เมื่อเปลี่ยน service/duration/therapist ใน edit modal → อัปเดตราคาอัตโนมัติ
+  window.onEditChange = () => {
+    const svc = document.getElementById('editService').value;
+    const dur = document.getElementById('editDuration').value;
+    const tName = document.getElementById('editTherapist').value;
+    const { price, comm } = calcDefaultPriceComm(svc, dur, tName);
+    if (price !== null) {
+      document.getElementById('editPrice').value = price;
+      document.getElementById('editComm').value = comm;
+    }
+  };
+
+  // ถ้ารายเดือน → แก้ราคา แล้วค่ามือคำนวณ 10% อัตโนมัติ
+  window.onEditPriceInput = () => {
+    const tName = document.getElementById('editTherapist').value;
+    const t = therapists.find(x => x.name === tName);
+    const svc = document.getElementById('editService').value;
+    if (t && t.type === 'monthly' && svc !== 'สอนสปาเวียดนาม') {
+      const p = parseFloat(document.getElementById('editPrice').value) || 0;
+      document.getElementById('editComm').value = Math.round(p * 0.1);
+    }
+  };
+
+  window.confirmEditTransaction = async () => {
+    const id = document.getElementById('editTxId').value;
+    const name = document.getElementById('editTherapist').value;
+    const service = document.getElementById('editService').value;
+    const dur = document.getElementById('editDuration').value;
+    const dateStr = document.getElementById('editDate').value;
+    const price = parseFloat(document.getElementById('editPrice').value);
+    const comm = parseFloat(document.getElementById('editComm').value);
+
+    if (!name || !service || !dur || isNaN(price) || !dateStr) {
+      showToast('⚠ กรุณากรอกข้อมูลให้ครบ'); return;
+    }
+
+    const durLabel = dur==='fixed'?'ราคาคงที่':dur==='30'?'30 นาที':dur==='60'?'60 นาที':dur==='90'?'90 นาที':'120 นาที';
+
+    try {
+      await updateDoc(doc(db, 'transactions', id), {
+        name, service, duration: dur, durationLabel: durLabel,
+        price, commission: isNaN(comm) ? 0 : comm,
+        date: new Date(dateStr + 'T12:00:00'), dateStr
+      });
+      closeEditModal();
+      showToast('✓ แก้ไขเรียบร้อย');
+    } catch(e) { showToast('❌ แก้ไขไม่สำเร็จ: ' + e.message); }
   };
 
   // ========== REALTIME ==========
@@ -1060,23 +807,19 @@
   function renderTodayList() {
     const todayStr = new Date().toISOString().split('T')[0];
     const todayTx = allTransactions.filter(t => t.dateStr === todayStr);
-
     let total = 0, totalComm = 0;
     const perPerson = {};
-
     todayTx.forEach(t => {
       total += t.price || 0;
       totalComm += t.commission || 0;
-      if (!perPerson[t.name]) perPerson[t.name] = { total: 0, comm: 0 };
+      if (!perPerson[t.name]) perPerson[t.name] = { total:0, comm:0 };
       perPerson[t.name].total += t.price || 0;
       perPerson[t.name].comm += t.commission || 0;
     });
-
     document.getElementById('summaryTotal').textContent = total.toLocaleString();
     document.getElementById('summaryComm').textContent = totalComm.toLocaleString();
     document.getElementById('summaryCount').textContent = todayTx.length;
 
-    // Therapist grid
     const grid = document.getElementById('therapistGrid');
     if (Object.keys(perPerson).length === 0) {
       grid.innerHTML = '<div class="empty-state"><div class="e-icon">🌿</div><div class="e-text">ยังไม่มีรายการวันนี้</div></div>';
@@ -1099,7 +842,6 @@
       }
     }
 
-    // TX list
     const list = document.getElementById('txList');
     if (todayTx.length === 0) {
       list.innerHTML = '<div class="empty-state"><div class="e-icon">📋</div><div class="e-text">ยังไม่มีรายการ</div></div>';
@@ -1109,19 +851,22 @@
     todayTx.forEach(tx => {
       const item = document.createElement('div');
       item.className = 'tx-item';
-      const initials = tx.name ? tx.name.slice(0,2) : '??';
       item.innerHTML = `
-        <div class="tx-avatar">${initials}</div>
+        <div class="tx-avatar">${(tx.name||'??').slice(0,2)}</div>
         <div class="tx-info">
-          <div class="tx-name">${tx.name || '—'}</div>
-          <div class="tx-detail">${tx.service || '—'} · ${tx.durationLabel || '—'}</div>
+          <div class="tx-name">${tx.name||'—'}</div>
+          <div class="tx-detail">${tx.service||'—'} · ${tx.durationLabel||'—'}</div>
         </div>
         <div class="tx-amounts">
           <div class="tx-price">${(tx.price||0).toLocaleString()} ฿</div>
           <div class="tx-com">มือ ${(tx.commission||0).toLocaleString()} ฿</div>
         </div>
-        <button class="btn-delete" data-id="${tx.id}">ลบ</button>
+        <div class="tx-actions">
+          <button class="btn-edit">✏️ แก้</button>
+          <button class="btn-delete">ลบ</button>
+        </div>
       `;
+      item.querySelector('.btn-edit').onclick = () => openEditModal(tx);
       item.querySelector('.btn-delete').onclick = () => deleteTransaction(tx.id);
       list.appendChild(item);
     });
@@ -1136,58 +881,51 @@
   // ========== REPORT ==========
   window.renderReport = () => {
     const mode = document.getElementById('reportMode').value;
-    document.getElementById('filterDateGroup').style.display = mode === 'daily' ? '' : 'none';
-    document.getElementById('filterMonthGroup').style.display = mode === 'monthly' ? '' : 'none';
-    document.getElementById('leaveSection').style.display = mode === 'monthly' ? '' : 'none';
+    document.getElementById('filterDateGroup').style.display = mode==='daily' ? '' : 'none';
+    document.getElementById('filterMonthGroup').style.display = mode==='monthly' ? '' : 'none';
+    document.getElementById('leaveSection').style.display = mode==='monthly' ? '' : 'none';
 
-    const reportDateLabel = document.getElementById('reportDateLabel');
     let filtered;
     if (mode === 'daily') {
       const dateVal = document.getElementById('filterDate').value;
-      reportDateLabel.textContent = dateVal
-        ? new Date(dateVal).toLocaleDateString('th-TH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-        : '';
+      document.getElementById('reportDateLabel').textContent = dateVal
+        ? new Date(dateVal).toLocaleDateString('th-TH',{weekday:'long',year:'numeric',month:'long',day:'numeric'}) : '';
       filtered = allTransactions.filter(t => t.dateStr === dateVal);
     } else {
       const monthVal = document.getElementById('filterMonth').value;
-      reportDateLabel.textContent = monthVal
-        ? new Date(`${monthVal}-01`).toLocaleDateString('th-TH', { year: 'numeric', month: 'long' })
-        : '';
+      document.getElementById('reportDateLabel').textContent = monthVal
+        ? new Date(`${monthVal}-01`).toLocaleDateString('th-TH',{year:'numeric',month:'long'}) : '';
       filtered = allTransactions.filter(t => t.dateStr && t.dateStr.startsWith(monthVal));
     }
 
-    // Summary
-    let rTotal = 0, rComm = 0;
-    filtered.forEach(t => { rTotal += t.price||0; rComm += t.commission||0; });
+    let rTotal=0, rComm=0;
+    filtered.forEach(t => { rTotal+=t.price||0; rComm+=t.commission||0; });
     document.getElementById('rTotal').textContent = rTotal.toLocaleString();
     document.getElementById('rComm').textContent = rComm.toLocaleString();
     document.getElementById('rCount').textContent = filtered.length;
 
-    // Per person
     const perPerson = {};
     filtered.forEach(t => {
-      if (!perPerson[t.name]) perPerson[t.name] = { total: 0, comm: 0, count: 0 };
+      if (!perPerson[t.name]) perPerson[t.name] = { total:0, comm:0, count:0 };
       perPerson[t.name].total += t.price||0;
       perPerson[t.name].comm += t.commission||0;
       perPerson[t.name].count++;
     });
 
-    // Leave inputs (monthly)
     if (mode === 'monthly') {
       const leaveDiv = document.getElementById('leaveInputs');
-      const monthlyTherapists = therapists.filter(t => t.type === 'monthly');
+      const monthlyT = therapists.filter(t => t.type === 'monthly');
       leaveDiv.innerHTML = '';
-      if (monthlyTherapists.length === 0) {
+      if (monthlyT.length === 0) {
         leaveDiv.innerHTML = '<p style="color:var(--text-light);font-size:0.85rem">ไม่มีพนักงานรายเดือน</p>';
       } else {
-        monthlyTherapists.forEach(t => {
+        monthlyT.forEach(t => {
           const row = document.createElement('div');
           row.style.cssText = 'display:flex;align-items:center;gap:12px;margin-bottom:10px;';
           row.innerHTML = `
             <span style="flex:1;font-weight:600;color:var(--text-mid)">${t.name}</span>
             <label style="font-size:0.8rem;color:var(--text-light)">วันขาด/ลา</label>
-            <input type="number" min="0" max="30" value="0" id="leave_${t.name}" 
-              oninput="renderReport()" 
+            <input type="number" min="0" max="30" value="0" id="leave_${t.name}" oninput="renderReport()"
               style="width:70px;text-align:center;padding:8px;border:1.5px solid var(--sand);border-radius:8px;font-family:Sarabun;background:var(--cream)">
           `;
           leaveDiv.appendChild(row);
@@ -1195,7 +933,6 @@
       }
     }
 
-    // Table
     const tbody = document.getElementById('reportTableBody');
     tbody.innerHTML = '';
     if (Object.keys(perPerson).length === 0) {
@@ -1204,33 +941,28 @@
       for (const [name, data] of Object.entries(perPerson)) {
         const t = therapists.find(x => x.name === name);
         const isMonthly = t && t.type === 'monthly';
-        let netIncome;
-        let commDisplay;
-
+        let netIncome, commDisplay;
         if (isMonthly) {
           const leave = parseInt(document.getElementById(`leave_${name}`)?.value || 0);
-          const salary = 14000;
-          const deduct = Math.round(salary / 30 * leave);
+          const deduct = Math.round(14000 / 30 * leave);
           commDisplay = data.comm;
-          netIncome = salary - deduct + data.comm;
+          netIncome = 14000 - deduct + data.comm;
         } else {
-          commDisplay = Math.max(data.comm, mode === 'daily' ? 400 : data.comm);
+          commDisplay = Math.max(data.comm, mode==='daily' ? 400 : data.comm);
           netIncome = commDisplay;
         }
-
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><strong>${name}</strong></td>
-          <td><span class="badge ${isMonthly ? 'badge-monthly' : 'badge-daily'}">${isMonthly ? 'รายเดือน' : 'รายวัน'}</span></td>
+          <td><span class="badge ${isMonthly?'badge-monthly':'badge-daily'}">${isMonthly?'รายเดือน':'รายวัน'}</span></td>
           <td>${data.total.toLocaleString()}</td>
           <td>${commDisplay.toLocaleString()}</td>
-          <td><strong>${netIncome.toLocaleString()}</strong>${isMonthly ? ' <small style="color:var(--text-light)">(รวมเงินเดือน)</small>' : ''}</td>
+          <td><strong>${netIncome.toLocaleString()}</strong>${isMonthly?' <small style="color:var(--text-light)">(รวมเงินเดือน)</small>':''}</td>
         `;
         tbody.appendChild(tr);
       }
     }
 
-    // Detail table
     const detailBody = document.getElementById('detailTableBody');
     detailBody.innerHTML = '';
     if (filtered.length === 0) {
@@ -1246,9 +978,15 @@
           <td>${tx.durationLabel||'—'}</td>
           <td>${(tx.price||0).toLocaleString()}</td>
           <td>${(tx.commission||0).toLocaleString()}</td>
-          <td><button class="btn-delete" data-id="${tx.id}">ลบ</button></td>
+          <td>
+            <div class="action-cell">
+              <button class="btn-edit">✏️ แก้</button>
+              <button class="btn-delete">ลบ</button>
+            </div>
+          </td>
         `;
-        tr.querySelector('.btn-delete').onclick = () => deleteTransaction(tx.id).then(() => renderReport());
+        tr.querySelector('.btn-edit').onclick = () => openEditModal(tx);
+        tr.querySelector('.btn-delete').onclick = () => deleteTransaction(tx.id);
         detailBody.appendChild(tr);
       });
     }
@@ -1267,7 +1005,7 @@
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
     document.getElementById(`page-${page}`).classList.add('active');
-    document.querySelectorAll('.nav-tab')[page === 'pos' ? 0 : 1].classList.add('active');
+    document.querySelectorAll('.nav-tab')[page==='pos'?0:1].classList.add('active');
     if (page === 'report') renderReport();
   };
 </script>
