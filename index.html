@@ -7,8 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="icon" sizes="32x32" href="massage.png">
-<link rel="icon" sizes="192x192" href="massage.png">
-<link rel="apple-touch-icon" href="massage.png">
+  <link rel="icon" sizes="192x192" href="massage.png">
+  <link rel="apple-touch-icon" href="massage.png">
   <style>
     :root {
       --cream: #faf6f1;
@@ -168,6 +168,66 @@
       box-shadow: 0 0 0 3px rgba(160,114,74,0.12);
     }
 
+    /* ===== EDITABLE PRICE FIELDS ===== */
+    .price-edit-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .price-edit-group {
+      background: linear-gradient(135deg, var(--brown-dark) 0%, var(--brown-mid) 100%);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .price-edit-label {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .price-edit-input {
+      width: 100%;
+      background: rgba(255,255,255,0.12) !important;
+      border: 1.5px solid rgba(255,255,255,0.2) !important;
+      border-radius: 8px !important;
+      color: var(--gold-light) !important;
+      font-family: 'Playfair Display', serif !important;
+      font-size: 1.3rem !important;
+      font-weight: 700 !important;
+      padding: 6px 10px !important;
+      text-align: center;
+      background-image: none !important;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .price-edit-input:focus {
+      border-color: var(--gold-light) !important;
+      background: rgba(255,255,255,0.18) !important;
+      box-shadow: 0 0 0 2px rgba(232,192,106,0.2) !important;
+    }
+
+    .price-edit-input::placeholder {
+      color: rgba(255,255,255,0.3);
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 400;
+    }
+
+    .price-edit-hint {
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+    }
+
     /* ===== THERAPIST ROW ===== */
     .therapist-row { display: flex; gap: 8px; align-items: flex-end; }
     .therapist-row select { flex: 1; }
@@ -184,29 +244,6 @@
       line-height: 1;
     }
     .btn-add-therapist:hover { background: var(--brown-pale); color: white; }
-
-    /* ===== PRICE PREVIEW ===== */
-    .price-preview {
-      background: linear-gradient(135deg, var(--brown-dark) 0%, var(--brown-mid) 100%);
-      border-radius: var(--radius-sm);
-      padding: 16px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 4px;
-    }
-
-    .price-item { text-align: center; }
-    .price-label { font-size: 0.72rem; color: rgba(255,255,255,0.6); letter-spacing: 0.5px; text-transform: uppercase; }
-    .price-value {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.4rem;
-      color: var(--gold-light);
-      font-weight: 700;
-      margin-top: 2px;
-    }
-
-    .price-divider { width: 1px; height: 36px; background: rgba(255,255,255,0.15); }
 
     /* ===== EMPLOYEE TYPE TOGGLE ===== */
     .toggle-group { display: flex; gap: 0; border: 1.5px solid var(--sand); border-radius: var(--radius-sm); overflow: hidden; }
@@ -517,6 +554,23 @@
       color: var(--text-light);
       margin-top: 4px;
     }
+
+    /* ===== CUSTOM PRICE NOTE ===== */
+    .custom-price-note {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.45);
+      text-align: center;
+      margin-top: 2px;
+      font-style: italic;
+    }
+
+    .price-edit-row-label {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      margin-bottom: 4px;
+      text-align: center;
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
@@ -583,7 +637,7 @@
       <div class="form-group">
         <label>หมอนวด</label>
         <div class="therapist-row">
-          <select id="therapistSelect">
+          <select id="therapistSelect" onchange="updatePricePreview()">
             <option value="">-- เลือกหมอนวด --</option>
           </select>
           <button class="btn-add-therapist" title="เพิ่มหมอนวดใหม่" onclick="openModal()">+</button>
@@ -610,16 +664,33 @@
         <label>วันที่</label>
         <input type="date" id="transactionDate">
       </div>
+
+      <!-- ===== EDITABLE PRICE & COMMISSION ===== -->
       <div class="form-group full">
-        <div class="price-preview">
-          <div class="price-item">
-            <div class="price-label">ราคาบริการ</div>
-            <div class="price-value" id="previewPrice">—</div>
+        <p class="price-edit-row-label">✏️ แก้ไขราคาและค่ามือได้ตามต้องการ</p>
+        <div class="price-edit-row">
+          <div class="price-edit-group">
+            <div class="price-edit-label">ราคาบริการ (฿)</div>
+            <input
+              type="number"
+              id="inputPrice"
+              class="price-edit-input"
+              placeholder="—"
+              min="0"
+              oninput="onPriceManualEdit()"
+            >
+            <div class="custom-price-note" id="defaultPriceNote"></div>
           </div>
-          <div class="price-divider"></div>
-          <div class="price-item">
-            <div class="price-label">ค่ามือพนักงาน</div>
-            <div class="price-value" id="previewComm">—</div>
+          <div class="price-edit-group">
+            <div class="price-edit-label">ค่ามือพนักงาน (฿)</div>
+            <input
+              type="number"
+              id="inputComm"
+              class="price-edit-input"
+              placeholder="—"
+              min="0"
+            >
+            <div class="custom-price-note" id="defaultCommNote"></div>
           </div>
         </div>
       </div>
@@ -754,7 +825,7 @@
 
   // ========== CONFIG ==========
   const firebaseConfig = {
-    apiKey: "AIzaSy...",
+    apiKey: "AIzaSyBvTJR8pE3aPRD6Z3ibFCvbTpnXihs08MM",
     authDomain: "massage-pos-4fb5b.firebaseapp.com",
     projectId: "massage-pos-4fb5b",
     appId: "1:279791437227:web:42f3dae019a993e741feee"
@@ -773,24 +844,23 @@
     "นวดอโรมา ทองคำ":    { prices: [499.5,999,1499,1998],comms: [100,200,300,400], fixed: false },
     "นวดน้ำมัน อโรมา":   { prices: [300,600,900,1200], comms: [100,200,300,40], fixed: false },
     "นวดแก้อาการ":       { prices: [300,600,900,1200], comms: [100,200,300,400], fixed: false },
-    "ขัดผิว + อโรมา":       { prices: [0,1499,1499,1499], comms: [0,490,490,490], fixed: false },
+    "ขัดผิว + อโรมา":    { prices: [0,1499,1499,1499], comms: [0,490,490,490], fixed: false },
     "สปาผมเวียดนาม":     { prices: [0,550,825,1100], comms: [0,150,225,300], fixed: false },
-    "สปาผมเวียดนาม+สปาหู":     { prices: [0,850,0,0], comms: [0,210,0,0], fixed: false },
-    "นวดบุฟเฟต์ โปร 999":     { prices: [0,999,999,999], comms: [0,350,0,0], fixed: false },
+    "สปาผมเวียดนาม+สปาหู":{ prices: [0,850,0,0], comms: [0,210,0,0], fixed: false },
+    "นวดบุฟเฟต์ โปร 999": { prices: [0,999,999,999], comms: [0,350,0,0], fixed: false },
     "สปาบุฟเฟต์ 3 ชม.":  { prices: [999], comms: [350], fixed: true },
-    "สอนสปาเวียดนาม":    { prices: [2999], comms: null, fixed: true },  // monthly: 20% | daily: 0
-    "BB glow 2500 คอร์ส 3 ครั้ง /ครั้งที่ 1":   { prices: [0,833,0,0], comms: [0,0,0,0], fixed: false },
-    "BB glow 2500 คอร์ส 3 ครั้ง /ครั้งที่ 2":   { prices: [0,833,0,0], comms: [0,0,0,0], fixed: false },
-    "BB glow 2500 คอร์ส 3 ครั้ง /ครั้งที่ 3":   { prices: [0,833,0,0], comms: [0,0,0,0], fixed: false },
-    "ขัดผิว":     { prices: [0,999,0,0], comms: [0,290,0,0], fixed: false },
-    
+    "สอนสปาเวียดนาม":    { prices: [2999], comms: null, fixed: true },
+    "BB glow 2500 คอร์ส 3 ครั้ง /ครั้งที่ 1": { prices: [0,833,0,0], comms: [0,0,0,0], fixed: false },
+    "BB glow 2500 คอร์ส 3 ครั้ง /ครั้งที่ 2": { prices: [0,833,0,0], comms: [0,0,0,0], fixed: false },
+    "BB glow 2500 คอร์ส 3 ครั้ง /ครั้งที่ 3": { prices: [0,833,0,0], comms: [0,0,0,0], fixed: false },
+    "ขัดผิว": { prices: [0,999,0,0], comms: [0,290,0,0], fixed: false },
   };
 
-  const DURATIONS = ["30","60","90","120"];// For services that have variable pricing based on duration
+  const DURATIONS = ["30","60","90","120"];
 
   // ========== STATE ==========
   let allTransactions = [];
-  let therapists = []; // { id, name, type: 'daily'|'monthly' }
+  let therapists = [];
   let modalType = 'daily';
 
   // ========== INIT ==========
@@ -802,7 +872,6 @@
   filterDate.value = today.toISOString().split('T')[0];
   filterMonth.value = today.toISOString().slice(0,7);
 
-  // Set current date for transaction date
   document.getElementById('transactionDate').value = today.toISOString().split('T')[0];
 
   // Populate service dropdown
@@ -860,16 +929,12 @@
   };
 
   // ========== PRICE CALC ==========
-  window.updatePricePreview = () => {
-    const svc = document.getElementById('serviceSelect').value;
-    const dur = document.getElementById('durationSelect').value;
-    const pp = document.getElementById('previewPrice');
-    const pc = document.getElementById('previewComm');
-
-    if (!svc || !dur) { pp.textContent = '—'; pc.textContent = '—'; return; }
+  // คำนวณราคา/ค่ามือ default จาก service+duration+therapist type
+  function calcDefaultPriceComm(svc, dur, tName) {
+    if (!svc || !dur) return { price: null, comm: null };
 
     const data = SERVICES[svc];
-    if (!data) return;
+    if (!data) return { price: null, comm: null };
 
     let price, comm;
 
@@ -878,32 +943,61 @@
       comm = data.comms ? data.comms[0] : 0;
     } else {
       const idx = DURATIONS.indexOf(dur);
-      if (idx === -1) { pp.textContent = '—'; pc.textContent = '—'; return; }
+      if (idx === -1) return { price: null, comm: null };
       price = data.prices[idx];
       comm = data.comms ? data.comms[idx] : 0;
     }
-    // 🔥 เช็คประเภทพนักงาน
-        const tName = document.getElementById('therapistSelect').value;
-        const t = therapists.find(x => x.name === tName);
 
-        // 👉 ถ้าเป็นพนักงานรายเดือน → ค่าคอม = 10%
-        if (t && t.type === 'monthly') {
-        comm = Math.round(price * 0.1);
-        }
+    // เช็คประเภทพนักงาน → รายเดือนคิดค่าคอม 10%
+    const t = therapists.find(x => x.name === tName);
+    if (t && t.type === 'monthly') {
+      comm = Math.round(price * 0.1);
+    }
 
-    // Special: สอนสปา - check therapist type
+    // Special: สอนสปา
     if (svc === 'สอนสปาเวียดนาม') {
-      const tName = document.getElementById('therapistSelect').value;
-      const t = therapists.find(x => x.name === tName);
       comm = t && t.type === 'monthly' ? Math.round(price * 0.2) : 0;
     }
 
-    pp.textContent = price.toLocaleString();
-    pc.textContent = comm.toLocaleString();
+    return { price, comm };
+  }
 
-    // Store in preview elements as data
-    pp.dataset.price = price;
-    pc.dataset.comm = comm;
+  // เมื่อเลือก service/duration/therapist → อัปเดต input price & comm (แต่ยังแก้ได้)
+  window.updatePricePreview = () => {
+    const svc = document.getElementById('serviceSelect').value;
+    const dur = document.getElementById('durationSelect').value;
+    const tName = document.getElementById('therapistSelect').value;
+
+    const { price, comm } = calcDefaultPriceComm(svc, dur, tName);
+
+    const inputPrice = document.getElementById('inputPrice');
+    const inputComm = document.getElementById('inputComm');
+    const defaultPriceNote = document.getElementById('defaultPriceNote');
+    const defaultCommNote = document.getElementById('defaultCommNote');
+
+    if (price !== null) {
+      inputPrice.value = price;
+      inputComm.value = comm;
+      defaultPriceNote.textContent = `ราคามาตรฐาน: ${price.toLocaleString()} ฿`;
+      defaultCommNote.textContent = `ค่ามือมาตรฐาน: ${comm.toLocaleString()} ฿`;
+    } else {
+      inputPrice.value = '';
+      inputComm.value = '';
+      defaultPriceNote.textContent = '';
+      defaultCommNote.textContent = '';
+    }
+  };
+
+  // เมื่อแก้ราคาเอง → ถ้าเป็นรายเดือน ค่ามือคำนวณ 10% อัตโนมัติ
+  window.onPriceManualEdit = () => {
+    const tName = document.getElementById('therapistSelect').value;
+    const t = therapists.find(x => x.name === tName);
+    const svc = document.getElementById('serviceSelect').value;
+
+    if (t && t.type === 'monthly' && svc !== 'สอนสปาเวียดนาม') {
+      const newPrice = parseFloat(document.getElementById('inputPrice').value) || 0;
+      document.getElementById('inputComm').value = Math.round(newPrice * 0.1);
+    }
   };
 
   // ========== SAVE ==========
@@ -912,10 +1006,10 @@
     const service = document.getElementById('serviceSelect').value;
     const dur = document.getElementById('durationSelect').value;
     const dateStr = document.getElementById('transactionDate').value;
-    const price = parseInt(document.getElementById('previewPrice').dataset.price || 0);
-    const comm = parseInt(document.getElementById('previewComm').dataset.comm || 0);
+    const price = parseFloat(document.getElementById('inputPrice').value);
+    const comm = parseFloat(document.getElementById('inputComm').value);
 
-    if (!name || !service || !dur || !price || !dateStr) {
+    if (!name || !service || !dur || isNaN(price) || !price || !dateStr) {
       showToast('⚠ กรุณาเลือกข้อมูลให้ครบ'); return;
     }
 
@@ -925,14 +1019,15 @@
 
     try {
       const durLabel = dur === 'fixed' ? 'ราคาคงที่'
+        : dur === '30' ? '30 นาที'
         : dur === '60' ? '60 นาที'
         : dur === '90' ? '90 นาที' : '120 นาที';
 
-      const date = new Date(dateStr + 'T12:00:00'); // Default time at noon
+      const date = new Date(dateStr + 'T12:00:00');
 
       await addDoc(collection(db, 'transactions'), {
         name, service, duration: dur, durationLabel: durLabel,
-        price, commission: comm,
+        price, commission: isNaN(comm) ? 0 : comm,
         date: date,
         dateStr: dateStr
       });
@@ -941,10 +1036,10 @@
       document.getElementById('serviceSelect').value = '';
       document.getElementById('durationSelect').value = '';
       document.getElementById('transactionDate').value = new Date().toISOString().split('T')[0];
-      document.getElementById('previewPrice').textContent = '—';
-      document.getElementById('previewComm').textContent = '—';
-      delete document.getElementById('previewPrice').dataset.price;
-      delete document.getElementById('previewComm').dataset.comm;
+      document.getElementById('inputPrice').value = '';
+      document.getElementById('inputComm').value = '';
+      document.getElementById('defaultPriceNote').textContent = '';
+      document.getElementById('defaultCommNote').textContent = '';
     } catch(e) {
       showToast('❌ บันทึกไม่สำเร็จ: ' + e.message);
     }
@@ -1116,9 +1211,6 @@
           const leave = parseInt(document.getElementById(`leave_${name}`)?.value || 0);
           const salary = 14000;
           const deduct = Math.round(salary / 30 * leave);
-          const teachComm = filtered
-            .filter(tx => tx.name === name && tx.service === 'สอนสปาเวียดนาม')
-            .reduce((s,tx) => s + (tx.commission||0), 0);
           commDisplay = data.comm;
           netIncome = salary - deduct + data.comm;
         } else {
@@ -1171,7 +1263,6 @@
   }
   window.showToast = showToast;
 
-  // Also call renderReport on tab switch
   window.showPage = (page) => {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
