@@ -1568,6 +1568,10 @@
         container.innerHTML = "";
         addServiceItem();
       }
+      window.addServiceItem = addServiceItem;
+      window.removeServiceItem = removeServiceItem;
+      window.updateAllServicePreviews = updateAllServicePreviews;
+      window.resetServiceSection = resetServiceSection;
 
       // ========== THERAPISTS ==========
       onSnapshot(collection(db, "therapists"), (snap) => {
